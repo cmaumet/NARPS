@@ -70,7 +70,7 @@ function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
                     if ~iscell(cond_names)
                         cond_name = cond_names;
                         FSL3colfile=fullfile(OnsetDir,sprintf('%s_%s',sub_run, cond_name));
-                        system(['BIDSto3col.sh -s -b ' removed_TR_time ' ' onsets_opt dur_opt ' ' event_file ' ' FSL3colfile]);                   
+                        system(['export PATH=$PATH:/Users/camaumet/Softs/bidsutils/BIDSto3col; BIDSto3col.sh -s -b ' removed_TR_time ' ' onsets_opt dur_opt ' ' event_file ' ' FSL3colfile]);                   
                         ThreeCol{j}=fullfile(OnsetDir,sprintf('%s_%s.txt',sub_run,cond_name));
                         CondNamesOnly{j} = cond_name;
                     else
@@ -90,7 +90,7 @@ function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
                             height_opt = [' -h ', height];
 
                             pmod_cond_name = cond_names{1+jj};
-                            system(['BIDSto3col.sh -s -b ' removed_TR_time ' ' onsets_opt height_opt dur_opt ' ' event_file ' ' strrep(base_cond_file,'.txt', '')]);
+                            system(['export PATH=$PATH:/Users/camaumet/Softs/bidsutils/BIDSto3col; BIDSto3col.sh -s -b ' removed_TR_time ' ' onsets_opt height_opt dur_opt ' ' event_file ' ' strrep(base_cond_file,'.txt', '')]);
                             pmod_cond_file_auto = strrep(base_cond_file, '.txt', '_pmod.txt');
                             pmod_cond_file = strrep(pmod_cond_file_auto, [base_cond_name '_pmod'], pmod_cond_name);
                             movefile(pmod_cond_file_auto, pmod_cond_file);

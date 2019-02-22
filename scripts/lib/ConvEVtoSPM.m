@@ -104,6 +104,8 @@ for i=1:length(ThreeCols)
 	pmod(i).name{ii-1}  = CondNames{i}{ii};
 	pmod(i).param{ii-1} = EV(:,3);
 	pmod(i).poly{ii-1}  = 1;
+%   % Set orthogonalisation to true
+    pmod(i).orth{ii-1}  = 1;
       end
     end
 

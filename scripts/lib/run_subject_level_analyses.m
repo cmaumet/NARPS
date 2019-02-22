@@ -14,15 +14,14 @@ function run_subject_level_analyses(sub_dirs, preproc_dir, sub_template, level1_
         
         [~,sub,~] = fileparts(sub_dirs{i});
         OUT_DIR = fullfile(level1_dir, sub);
-        sub = ['^' sub];
         
-        fmri_files = cellstr(spm_select('List', func_dir, [sub '.*\.nii$']));
+        fmri_files = cellstr(spm_select('List', func_dir, ['^s' sub '.*\.nii$']));
         for r = 1:numel(fmri_files)
             sub_run = [sub '.*_run-' sprintf('%02d',r)];
-            fmris = cellstr(spm_select('ExtFPList', func_dir, [sub_run '.*\.nii'], Inf)); 
+            fmris = cellstr(spm_select('ExtFPList', func_dir, ['^s' sub_run '.*\.nii'], Inf)); 
             fmris = fmris(num_ignored_volumes+1:end);
             eval(['FUNC_RUN_' num2str(r) ' =  fmris;']);
-            onset_file = spm_select('FPList', onset_dir, [sub_run '.*\.mat']);
+            onset_file = spm_select('FPList', onset_dir, ['^' sub_run '.*\.mat']);
             eval(['ONSETS_RUN_' num2str(r) ' = onset_file;']);
         end
         
