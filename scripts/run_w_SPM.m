@@ -30,8 +30,8 @@ function run_w_SPM()
         addpath(fullfile(fileparts(mfilename('fullpath')), 'lib'))
     end
     
-    copy_gunzip(fmriprep_dir, preproc_dir, {'sub-001', 'sub-002', ...
-        'sub-003', 'sub-004', 'sub-005'});
+    copy_gunzip(fmriprep_dir, preproc_dir, {'sub-001', 'sub-002'}) %, ...
+%         'sub-003', 'sub-004', 'sub-005'});
     
     % Directory to store the onset files
     onset_dir = fullfile(spm_out_dir, 'onsets');
