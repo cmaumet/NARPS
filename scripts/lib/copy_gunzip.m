@@ -81,7 +81,7 @@ function copy_gunzip(fmriprep_dir, preproc_dir, subject_ids)
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyto ...
                     = {func_preproc_dir};
                 
-                fmri{r} = spm_file(fmri{r}, 'path', anat_preproc_dir);
+                fmri{r} = spm_file(fmri{r}, 'path', func_preproc_dir);
                 
                 % Gunzip
                 matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = fmri(r);
