@@ -65,6 +65,7 @@ function run_w_SPM()
             {{'RT','RT_param'}, {'onset', 'duration', 'RT'}},...
         };
     create_onset_files(onset_dir, conditions, removed_TR_time, raw_sub_dirs);
+    run_smoothing(raw_sub_dirs, preproc_dir, 'SPM_preproc_template');
     run_subject_level_analyses(raw_sub_dirs, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
     % run_group_level_analysis(level1_dir, 'template_ds001_SPM_level2', level2_dir, '0001');
     % run_permutation_test(level1_dir, 'template_ds001_SPM_perm_test', perm_dir, '0001');
