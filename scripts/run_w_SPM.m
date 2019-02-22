@@ -30,8 +30,24 @@ function run_w_SPM()
         addpath(fullfile(fileparts(mfilename('fullpath')), 'lib'))
     end
     
-    copy_gunzip(fmriprep_dir, preproc_dir, {'sub-001', 'sub-002'}) %, ...
+    subject_ids = {'sub-001', 'sub-002'} %, ...
 %         'sub-003', 'sub-004', 'sub-005'});
+    if isempty(subject_ids)
+        fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
+        raw_sub_dirs = cellstr(spm_select('FPList', raw_dir, 'dir', 'sub-*'));
+    else
+        % Select only subjects of interest
+        fmriprep_sub_dirs = cell(length(subject_ids),1);
+        raw_sub_dirs = cell(length(subject_ids),1);
+        for i = 1:length(subject_ids)
+            fmriprep_sub_dirs(i,1) = cellstr(...
+                spm_select('FPList', fmriprep_dir, 'dir', subject_ids(i)));
+            raw_sub_dirs(i,1) = cellstr(...
+                spm_select('FPList', raw_dir, 'dir', subject_ids(i)));
+        end
+    end
+    
+    copy_gunzip(fmriprep_sub_dirs, preproc_dir)
     
     % Directory to store the onset files
     onset_dir = fullfile(spm_out_dir, 'onsets');
@@ -47,9 +63,8 @@ function run_w_SPM()
             {{'loss','loss_param'}, {'onset', 'duration', 'loss'}},...
             {{'RT','RT_param'}, {'onset', 'duration', 'RT'}},...
         };
-    create_onset_files(raw_dir, onset_dir, conditions, removed_TR_time);
-    % spm('defaults','FMRI');
-    % run_subject_level_analyses(study_dir, preproc_dir, 'template_ds001_SPM_level1', level1_dir, num_ignored_volumes, TR);
+    create_onset_files(onset_dir, conditions, removed_TR_time, raw_sub_dirs);
+    run_subject_level_analyses(raw_sub_dirs, preproc_dir, 'template_ds001_SPM_level1', level1_dir, num_ignored_volumes, TR);
     % run_group_level_analysis(level1_dir, 'template_ds001_SPM_level2', level2_dir, '0001');
     % run_permutation_test(level1_dir, 'template_ds001_SPM_perm_test', perm_dir, '0001');
     % mean_mni_images(preproc_dir, level1_dir, mni_dir);
