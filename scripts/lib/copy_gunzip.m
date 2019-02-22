@@ -2,19 +2,7 @@
 % Copy to 'preproc_dir' and gunzip anatomical and fmri files found in 
 % 'study_dir' (and organised according to BIDS)
 % _________________________________________________________________________
-function copy_gunzip(fmriprep_dir, preproc_dir, subject_ids)
-    
-    if ~exist('subject_ids', 'var')
-        sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
-    else
-        % Select only subjects of interest
-        sub_dirs = cell(length(subject_ids),1);
-        for i = 1:length(subject_ids)
-            sub_dirs(i,1) = cellstr(...
-                spm_select('FPList', fmriprep_dir, 'dir', subject_ids(i)));
-        end
-    end
-
+function copy_gunzip(sub_dirs, preproc_dir)
     % Create subfolder to store preprocessed data in the output folder
     if ~isdir(preproc_dir)
         mkdir(preproc_dir)
