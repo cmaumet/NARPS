@@ -20,7 +20,6 @@ function copy_gunzip(fmriprep_dir, preproc_dir, subject_ids)
         mkdir(preproc_dir)
     end
     
-    matlabbatch = cell(0);
     for n = 1:numel(sub_dirs)
         sub_folder = sub_dirs{n};
         anat_regexp = '.*_T1w_space-MNI152NLin2009cAsym_preproc\.nii\.gz';
@@ -38,15 +37,23 @@ function copy_gunzip(fmriprep_dir, preproc_dir, subject_ids)
         % Copy  & gunzip the anatomical image
         out_amri = spm_file(amri, 'path', anat_preproc_dir, 'ext', '');
         if ~isfile(out_amri)
+            disp([spm_file(sub_folder, 'basename') ': copy & gunzip (anat)'])
+            matlabbatch = {};
+            
             % Copy            
             matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.file_move.files ...
                 = {amri};
             matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyto ...
-                = {anat_preproc_dir};   
+                = {anat_preproc_dir};
+            
+            amri = spm_file(amri, 'path', anat_preproc_dir);
+            
             % Gunzip
             matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = {amri};
             matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};
             matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;
+            
+            spm_jobman('run', matlabbatch);    
         end
             
         fmri = cellstr(...
@@ -64,18 +71,25 @@ function copy_gunzip(fmriprep_dir, preproc_dir, subject_ids)
             out_fmri{r} = spm_file(fmri{r}, 'path', func_preproc_dir, 'ext', '');
             
             if ~isfile(out_fmri{r})
+                disp([spm_file(sub_folder, 'basename') ': copy & gunzip (run ' num2str(r) ')'])
+                
+                matlabbatch = {};
+                
                 % Copy
                 matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.file_move.files ...
                     = {fmri{r}};
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyto ...
                     = {func_preproc_dir};
+                
+                fmri{r} = spm_file(fmri{r}, 'path', anat_preproc_dir);
+                
                 % Gunzip
                 matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = fmri(r);
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;
+                
+                spm_jobman('run', matlabbatch);    
             end
         end
     end
-    spm_jobman('run', matlabbatch);    
-
 end
