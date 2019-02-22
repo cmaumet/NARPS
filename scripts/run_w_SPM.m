@@ -28,8 +28,9 @@ function run_w_SPM()
     % Add 'lib' folder to the matlab path
     if ~exist('copy_gunzip', 'file')
         addpath(fullfile(fileparts(mfilename('fullpath')), 'lib'))
+        addpath(fullfile(fileparts(mfilename('fullpath')), 'templates'))
     end
-    
+
     subject_ids = {'sub-001', 'sub-002'} %, ...
 %         'sub-003', 'sub-004', 'sub-005'});
     if isempty(subject_ids)
@@ -64,7 +65,7 @@ function run_w_SPM()
             {{'RT','RT_param'}, {'onset', 'duration', 'RT'}},...
         };
     create_onset_files(onset_dir, conditions, removed_TR_time, raw_sub_dirs);
-    run_subject_level_analyses(raw_sub_dirs, preproc_dir, 'template_ds001_SPM_level1', level1_dir, num_ignored_volumes, TR);
+    run_subject_level_analyses(raw_sub_dirs, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
     % run_group_level_analysis(level1_dir, 'template_ds001_SPM_level2', level2_dir, '0001');
     % run_permutation_test(level1_dir, 'template_ds001_SPM_perm_test', perm_dir, '0001');
     % mean_mni_images(preproc_dir, level1_dir, mni_dir);
