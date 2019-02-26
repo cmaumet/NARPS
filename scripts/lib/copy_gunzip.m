@@ -34,10 +34,8 @@ function copy_gunzip(sub_dirs, preproc_dir)
             matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyto ...
                 = {anat_preproc_dir};
             
-            amri = spm_file(amri, 'path', anat_preproc_dir);
-            
             % Gunzip
-            matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = {amri};
+            matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = cfg_dep('Move/Delete Files: Moved/Copied Files', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','files'));
             matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};
             matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;
             
@@ -69,10 +67,8 @@ function copy_gunzip(sub_dirs, preproc_dir)
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyto ...
                     = {func_preproc_dir};
                 
-                fmri{r} = spm_file(fmri{r}, 'path', func_preproc_dir);
-                
                 % Gunzip
-                matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = fmri(r);
+                matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.files(1) = cfg_dep('Move/Delete Files: Moved/Copied Files', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','files'));
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.outdir = {''};
                 matlabbatch{end}.cfg_basicio.file_dir.file_ops.cfg_gunzip_files.keep = false;
                 

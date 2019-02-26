@@ -16,8 +16,11 @@ function run_smoothing(sub_dirs, preproc_dir, sub_template)
         fmri_files = cellstr(spm_select('List', func_dir, [sub '.*\.nii$']));
         
         last_out_file = spm_file(spm_select('FPList', func_dir, [sub '.*_run-' sprintf('%02d',numel(fmri_files)) '.*\.nii']), 'prefix', 's');
-        if ~isfile(last_out_file)
+        if ~isfile(last_out_file)            
+            
             for r = 1:numel(fmri_files)
+                disp([sub(2:end) ': smoothing (run ' num2str(r) ')'])
+                
                 sub_run = [sub '.*_run-' sprintf('%02d',r)];
                 fmris = cellstr(spm_select('ExtFPList', func_dir, [sub_run '.*\.nii'], Inf)); 
                 eval(['FUNC_RUN_' num2str(r) ' =  fmris;']);
