@@ -1,4 +1,4 @@
-function run_subject_level_analyses(sub_dirs, preproc_dir, sub_template, level1_dir, num_ignored_volumes, TR, varargin)
+function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1_dir, num_ignored_volumes, TR, varargin)
 
     onset_dir = fullfile(preproc_dir, '..', 'onsets');
     func_dir = fullfile(preproc_dir, 'func');
@@ -9,10 +9,10 @@ function run_subject_level_analyses(sub_dirs, preproc_dir, sub_template, level1_
         mkdir(scripts_dir)
     end
 
-    for i = 1:numel(sub_dirs)       
+    for i = 1:numel(sub_names)       
         clearvars FUNC_RUN_* ONSETS_RUN_* OUT_DIR
         
-        [~,sub,~] = fileparts(sub_dirs{i});
+        sub = sub_names{i};
         OUT_DIR = fullfile(level1_dir, sub);
         
         stat_file = fullfile(OUT_DIR, 'spmT_0001.nii');

@@ -36,6 +36,7 @@ function run_w_SPM()
     if isempty(subject_ids)
         fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
         raw_sub_dirs = cellstr(spm_select('FPList', raw_dir, 'dir', 'sub-*'));
+        
     else
         % Select only subjects of interest
         fmriprep_sub_dirs = cell(length(subject_ids),1);
@@ -47,6 +48,7 @@ function run_w_SPM()
                 spm_select('FPList', raw_dir, 'dir', subject_ids(i)));
         end
     end
+    sub_names = spm_file(raw_sub_dirs, 'basename');
     
     copy_gunzip(fmriprep_sub_dirs, preproc_dir)
     
@@ -63,8 +65,8 @@ function run_w_SPM()
         };
     create_onset_files(onset_dir, conditions, removed_TR_time, raw_sub_dirs);
     run_smoothing(raw_sub_dirs, preproc_dir, 'SPM_preproc_template');
-    run_subject_level_analyses(raw_sub_dirs, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
-    % run_group_level_analysis(level1_dir, 'template_ds001_SPM_level2', level2_dir, '0001');
+    run_subject_level_analyses(sub_names, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
+    run_group_level_analysis(level1_dir, 'SPM_level2_template', level2_dir, '0001');
     % run_permutation_test(level1_dir, 'template_ds001_SPM_perm_test', perm_dir, '0001');
     % mean_mni_images(preproc_dir, level1_dir, mni_dir);
 end
