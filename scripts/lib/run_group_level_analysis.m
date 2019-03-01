@@ -1,4 +1,7 @@
-function run_group_level_analysis(level1_dir, group_batch_template, level2_dir, contrast_id)
+function run_group_level_analysis(sub_names, level1_dir, group_batch_template, level2_dir, contrast_id)
+         run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level2_template', level2_dir, '0001');
+
+
     sub_dirs = cellstr(spm_select('FPList',level1_dir, 'dir','sub-*'));
 
     scripts_dir = fullfile(level1_dir, '..', 'SCRIPTS');

@@ -15,7 +15,8 @@ function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1
         sub = sub_names{i};
         OUT_DIR = fullfile(level1_dir, sub);
         
-        stat_file = fullfile(OUT_DIR, 'spmT_0001.nii');
+        % Check whether second stat files was created
+        stat_file = fullfile(OUT_DIR, 'spmT_0002.nii');
         if ~isfile(stat_file)
             fmri_files = cellstr(spm_select('List', func_dir, ['^s' sub '.*\.nii$']));
             for r = 1:numel(fmri_files)
