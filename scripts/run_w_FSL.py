@@ -41,8 +41,8 @@ if subject_ids:
         raw_sub_dirs.append(os.path.join(config['raw_dir'], 'sub-' + s))
         fmriprep_sub_dirs.append(os.path.join(config['fmriprep_dir'], 'sub-' + s))
 else:
-    raw_sub_dirs = glob.glob(os.path.join(config['raw_dir'], 'sub-*'))
-    fmriprep_sub_dirs = glob.glob(os.path.join(config['fmriprep_dir'], 'sub-*'))
+    raw_sub_dirs = glob.glob(os.path.join(config['raw_dir'], 'sub-*/'))
+    fmriprep_sub_dirs = glob.glob(os.path.join(config['fmriprep_dir'], 'sub-*/'))
 
 # Copy raw anatomical and functional data to the preprocessing directory and
 # run BET on the anatomical images
@@ -54,9 +54,13 @@ raise Exception('Stopping here')
 # Directory to store the onset files
 onsetDir = os.path.join(fsl_dir, 'ONSETS')
 
+    # conditions = {...
+    #         {{'gamble','gain_param', 'loss_param', 'RT_param'}, {'onset', 'duration', 'gain', 'loss', 'RT'}},...
+    #     };
+
 # Define conditions and parametric modulations (if any)
 conditions = (
-    (('pumps_fixed', 'pumps_demean'), ('pumps_demean',)),
+    (('gamble', 'pumps_demean'), ('pumps_demean',)),
     ('pumps_RT', ('pumps_demean', 'response_time')),
     (('cash_fixed', 'cash_demean'), ('cash_demean',)),
     ('cash_RT', ('cash_demean', 'response_time')),
@@ -67,6 +71,9 @@ conditions = (
 
 # Create 3-columns onset files based on BIDS tsv files
 cond_files = create_fsl_onset_files(config['raw_dir'], onsetDir, conditions, removed_TR_time)
+
+
+
 
 run_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level1.fsf')
 sub_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level2.fsf')

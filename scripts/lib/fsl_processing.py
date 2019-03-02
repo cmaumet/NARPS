@@ -25,6 +25,8 @@ def copy_data(fmriprep_sub_dirs, preproc_dir, *args):
         anat_regexp = '*_T1w_space-MNI152NLin2009cAsym_preproc.nii.gz'
         fun_regexp = '*_bold_space-MNI152NLin2009cAsym_preproc.nii.gz'
 
+        print(sub_folder)
+
         # Find the anatomical MRI
         amri = glob.glob(
             os.path.join(sub_folder, 'anat', anat_regexp))[0]
