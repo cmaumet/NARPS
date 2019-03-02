@@ -2,30 +2,30 @@ import os
 import time
 import sys
 from subprocess import check_call
-import glob
+# import glob
 import re
 import string
 import shutil
 import stat
-from nilearn import image
+# from nilearn import image
 import numpy as np
 import nibabel as nib
 
 
-def copy_and_BET(raw_dir, preproc_dir, *args):
+def copy_data(raw_dir, preproc_dir, *args):
     """
     Copy to raw data (anatomical and functional) from 'raw_dir' (organised
     according to BIDS) to 'preproc_dir' and run BET on the anatomical images.
     """
 
-    # All subject directories
-    if args:
-        subject_ids = args[0]
-        sub_dirs = []
-        for s in subject_ids:
-            sub_dirs.append(os.path.join(raw_dir, 'sub-' + s))
-    else:
-        sub_dirs = glob.glob(os.path.join(raw_dir, 'sub-*'))
+    # # All subject directories
+    # if args:
+    #     subject_ids = args[0]
+    #     sub_dirs = []
+    #     for s in subject_ids:
+    #         sub_dirs.append(os.path.join(raw_dir, 'sub-' + s))
+    # else:
+    #     sub_dirs = glob.glob(os.path.join(raw_dir, 'sub-*'))
 
 
 

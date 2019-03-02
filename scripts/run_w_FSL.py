@@ -1,38 +1,55 @@
 import os
+import json
+import glob
 
-from lib.fsl_processing import copy_and_BET, create_fsl_onset_files
+from lib.fsl_processing import copy_data, create_fsl_onset_files
 from lib.fsl_processing import run_run_level_analyses
 from lib.fsl_processing import run_subject_level_analyses
 from lib.fsl_processing import run_group_level_analysis
 from lib.fsl_processing import run_permutation_test
 from lib.fsl_processing import mean_mni_images
 
-raw_dir = '/storage/essicd/data/NIDM-Ex/BIDS_Data/DATA/BIDS/ds001_R2.0.4'
-results_dir = '/storage/essicd/data/NIDM-Ex/BIDS_Data/RESULTS/SOFTWARE_COMPARISON/ds001'
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 
+	                   'config.json')) as f:
+    config = json.load(f)
 
-fsl_dir = os.path.join(results_dir, 'FSL')
+fsl_dir = os.path.join(config['output_dir'], 'FSL')
 if not os.path.isdir(fsl_dir):
     os.mkdir(fsl_dir)
 
-preproc_dir = os.path.join(fsl_dir, 'PREPROCESSING')
-level1_dir = os.path.join(fsl_dir, 'LEVEL1')
-level2_dir = os.path.join(fsl_dir, 'LEVEL1')
-level3_dir = os.path.join(fsl_dir, 'LEVEL2', 'group')
-perm_dir = os.path.join(fsl_dir, 'LEVEL2', 'permutation_test')
-mni_dir = os.path.join(fsl_dir, 'mean_mni_images')
+preproc_dir = os.path.join(fsl_dir, 'preproc')
+level1_dir = os.path.join(fsl_dir, 'level1')
+level2_dir = os.path.join(fsl_dir, 'level2')
+level3_dir = os.path.join(fsl_dir, 'level3')
 
 # Specify the number of functional volumes ignored in the study
 TR = 2
-num_ignored_volumes = 2
+num_ignored_volumes = 0 # TODO
 
 # Specify the TR that will be removed from onesets, equal to num_ignored_volumes*TR
 removed_TR_time = num_ignored_volumes*TR 
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
+subject_ids = ()
+raw_sub_dirs = ()
+fmriprep_sub_dirs = ()
+
+# All subject directories
+if subject_ids:
+    for s in subject_ids:
+        raw_sub_dirs.append(os.path.join(config['raw_dir'], 'sub-' + s))
+        fmriprep_sub_dirs.append(os.path.join(config['fmriprep_dir'], 'sub-' + s))
+else:
+    raw_sub_dirs = glob.glob(os.path.join(config['raw_dir'], 'sub-*'))
+    fmriprep_sub_dirs = glob.glob(os.path.join(config['fmriprep_dir'], 'sub-*'))
+
 # Copy raw anatomical and functional data to the preprocessing directory and
 # run BET on the anatomical images
-copy_and_BET(raw_dir, preproc_dir)
+copy_data(raw_sub_dirs, preproc_dir)
+
+raise Exception('Stopping here')
+################################################################
 
 # Directory to store the onset files
 onsetDir = os.path.join(fsl_dir, 'ONSETS')
@@ -49,7 +66,7 @@ conditions = (
     ('control_pumps_RT', ('control_pumps_demean', 'response_time')))
 
 # Create 3-columns onset files based on BIDS tsv files
-cond_files = create_fsl_onset_files(raw_dir, onsetDir, conditions, removed_TR_time)
+cond_files = create_fsl_onset_files(config['raw_dir'], onsetDir, conditions, removed_TR_time)
 
 run_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level1.fsf')
 sub_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level2.fsf')
