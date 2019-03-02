@@ -2,7 +2,7 @@ import os
 import time
 import sys
 from subprocess import check_call
-# import glob
+import glob
 import re
 import string
 import shutil
@@ -12,30 +12,18 @@ import numpy as np
 import nibabel as nib
 
 
-def copy_data(raw_dir, preproc_dir, *args):
+def copy_data(fmriprep_sub_dirs, preproc_dir, *args):
     """
     Copy to raw data (anatomical and functional) from 'raw_dir' (organised
     according to BIDS) to 'preproc_dir' and run BET on the anatomical images.
     """
-
-    # # All subject directories
-    # if args:
-    #     subject_ids = args[0]
-    #     sub_dirs = []
-    #     for s in subject_ids:
-    #         sub_dirs.append(os.path.join(raw_dir, 'sub-' + s))
-    # else:
-    #     sub_dirs = glob.glob(os.path.join(raw_dir, 'sub-*'))
-
-
-
     if not os.path.isdir(preproc_dir):
         os.mkdir(preproc_dir)
 
     # For each subject
-    for sub_folder in sub_dirs:
-        anat_regexp = '*_T1w.nii.gz'
-        fun_regexp = '*_bold.nii.gz'
+    for sub_folder in fmriprep_sub_dirs:
+        anat_regexp = '*_T1w_space-MNI152NLin2009cAsym_preproc.nii.gz'
+        fun_regexp = '*_bold_space-MNI152NLin2009cAsym_preproc.nii.gz'
 
         # Find the anatomical MRI
         amri = glob.glob(
@@ -46,26 +34,23 @@ def copy_data(raw_dir, preproc_dir, *args):
             os.path.join(sub_folder, 'func', fun_regexp))
 
         # Copy the anatomical image
-        anat_preproc_dir = os.path.join(preproc_dir, 'ANATOMICAL')
+        anat_preproc_dir = os.path.join(preproc_dir, 'anat')
         if not os.path.isdir(anat_preproc_dir):
             os.mkdir(anat_preproc_dir)
-        shutil.copy(amri, anat_preproc_dir)
+
+        out_amri = os.path.join(anat_preproc_dir, os.path.basename(amri))
+        if not os.path.exists(out_amri):
+            shutil.copy(amri, anat_preproc_dir)
 
         # For each run, copy the fMRI image
-        func_preproc_dir = os.path.join(preproc_dir, 'FUNCTIONAL')
+        func_preproc_dir = os.path.join(preproc_dir, 'func')
         if not os.path.isdir(func_preproc_dir):
             os.mkdir(func_preproc_dir)
 
         for fmri in fmris:
-            shutil.copy(fmri, func_preproc_dir)
-
-    # Applying BET to all the preprocessed anatomical MRIs
-    amris = glob.glob(
-        os.path.join(preproc_dir, 'ANATOMICAL', anat_regexp))
-    for amri in amris:
-        cmd = "bet " + amri + " " + amri.replace('.nii.gz', '_brain')
-        print(cmd)
-        check_call(cmd, shell=True)
+            out_fmri = os.path.join(func_preproc_dir, os.path.basename(fmri))
+            if not os.path.exists(out_fmri):
+                shutil.copy(fmri, func_preproc_dir)
 
 
 def create_fsl_onset_files(study_dir, OnsetDir, conditions, removed_TR_time, *args):

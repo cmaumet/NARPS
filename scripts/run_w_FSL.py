@@ -46,7 +46,7 @@ else:
 
 # Copy raw anatomical and functional data to the preprocessing directory and
 # run BET on the anatomical images
-copy_data(raw_sub_dirs, preproc_dir)
+copy_data(fmriprep_sub_dirs, preproc_dir)
 
 raise Exception('Stopping here')
 ################################################################
