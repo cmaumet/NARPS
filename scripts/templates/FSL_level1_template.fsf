@@ -398,7 +398,7 @@ set fmri(evtitle3) "loss_param"
 # 3 : Custom (3 column format)
 # 4 : Interaction
 # 10 : Empty (all zeros)
-set fmri(shape3) 0
+set fmri(shape3) 3
 
 # Convolution (EV 3)
 # 0 : None
@@ -453,7 +453,7 @@ set fmri(evtitle4) "RT_param"
 # 3 : Custom (3 column format)
 # 4 : Interaction
 # 10 : Empty (all zeros)
-set fmri(shape4) 0
+set fmri(shape4) 3
 
 # Convolution (EV 4)
 # 0 : None
@@ -475,7 +475,7 @@ set fmri(tempfilt_yn4) 1
 set fmri(deriv_yn4) 0
 
 # Custom EV file (EV 3)
-set fmri(custom3) "$onsets_RT_param"
+set fmri(custom4) "$onsets_RT_param"
 
 # Gamma sigma (EV 4)
 set fmri(gammasigma4) 3

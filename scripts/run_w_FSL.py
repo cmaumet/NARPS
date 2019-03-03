@@ -44,6 +44,9 @@ else:
     raw_sub_dirs = glob.glob(os.path.join(config['raw_dir'], 'sub-*/'))
     fmriprep_sub_dirs = glob.glob(os.path.join(config['fmriprep_dir'], 'sub-*/'))
 
+sub_names = list(map(os.path.basename, 
+	                 list(map(os.path.normpath, raw_sub_dirs))))
+
 # Copy raw anatomical and functional data to the preprocessing directory and
 # run BET on the anatomical images
 copy_data(fmriprep_sub_dirs, preproc_dir)
@@ -69,9 +72,11 @@ conditions = (
 # Create 3-columns onset files based on BIDS tsv files
 cond_files = create_fsl_onset_files(raw_sub_dirs, onsetDir, conditions, removed_TR_time)
 
-run_level_fsf = os.path.join(cwd, 'lib', 'templates' 'FSL_level1_template.fsf')
+run_level_fsf = os.path.join(cwd, 'templates', 'FSL_level1_template.fsf')
 # Run a GLM for each fMRI run of each subject
-run_run_level_analyses(preproc_dir, run_level_fsf, level1_dir, cond_files)
+
+
+run_run_level_analyses(sub_names, preproc_dir, run_level_fsf, level1_dir, cond_files)
 
 raise Exception('Stopping here')
 ################################################################

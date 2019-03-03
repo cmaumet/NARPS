@@ -25,8 +25,6 @@ def copy_data(fmriprep_sub_dirs, preproc_dir, *args):
         anat_regexp = '*_T1w_space-MNI152NLin2009cAsym_preproc.nii.gz'
         fun_regexp = '*_bold_space-MNI152NLin2009cAsym_preproc.nii.gz'
 
-        print(sub_folder)
-
         # Find the anatomical MRI
         amri = glob.glob(
             os.path.join(sub_folder, 'anat', anat_regexp))[0]
@@ -42,6 +40,7 @@ def copy_data(fmriprep_sub_dirs, preproc_dir, *args):
 
         out_amri = os.path.join(anat_preproc_dir, os.path.basename(amri))
         if not os.path.exists(out_amri):
+            print(sub_folder)
             shutil.copy(amri, anat_preproc_dir)
 
         # For each run, copy the fMRI image
@@ -52,6 +51,7 @@ def copy_data(fmriprep_sub_dirs, preproc_dir, *args):
         for fmri in fmris:
             out_fmri = os.path.join(func_preproc_dir, os.path.basename(fmri))
             if not os.path.exists(out_fmri):
+                print(sub_folder)
                 shutil.copy(fmri, func_preproc_dir)
 
 
@@ -157,26 +157,19 @@ def wait_for_feat(report_file):
                 sys.stdout.flush()
 
 
-def run_run_level_analyses(preproc_dir, run_level_fsf, level1_dir, cond_files):
+def run_run_level_analyses(sub_names, preproc_dir, run_level_fsf, level1_dir, cond_files):
     """
     Run a GLM for each fMRI run of each subject
     """
-    scripts_dir = os.path.join(preproc_dir, os.pardir, 'SCRIPTS')
+    scripts_dir = os.path.join(preproc_dir, os.pardir, 'scripts')
 
     if not os.path.isdir(scripts_dir):
         os.mkdir(scripts_dir)
 
-    # Pre-processing directories storing the fMRIs and aMRIs for all subjects
-    func_dir = os.path.join(preproc_dir, 'FUNCTIONAL')
-    anat_dir = os.path.join(preproc_dir, 'ANATOMICAL')
-
-    # All aMRI files (for all subjects)
-    amri_files = glob.glob(os.path.join(anat_dir, 'sub-*_brain.nii.gz'))
+    func_dir = os.path.join(preproc_dir, 'func')
 
     # For each subject
-    for amri in amri_files:
-        subreg = re.search('sub-\d+', amri)
-        sub = subreg.group(0)
+    for sub in sub_names:
 
         # All fMRI files for this subject
         fmri_files = glob.glob(os.path.join(func_dir, sub + '*.nii.gz'))
@@ -190,15 +183,19 @@ def run_run_level_analyses(preproc_dir, run_level_fsf, level1_dir, cond_files):
             out_dir = os.path.join(level1_dir, sub, run)
 
             # Retreive inputs required to fill-in the design.fsf template:
-            #   - amri: Path to the anatomical image (this subject)
             #   - fmri: Path to the functional image (this run)
             #   - outdir: Path to output feat directory
             #   - FSLDIR: Path to FSL (retreive from env variable FSLDIR)
             #   - onsets_xx: Path to onset file for condition 'xx'
-            values = {'amri': amri, 'fmri': fmri, 'out_dir': out_dir,
+            values = {'fmri': fmri, 'out_dir': out_dir,
                       'FSLDIR': os.environ['FSLDIR']}
-            for i, cond_file in enumerate(cond_files[sub_run]):
-                values['onsets_' + str(i+1)] = cond_file
+
+            
+            for cond_file in cond_files[sub_run]:
+                name = re.search('([a-zA-Z_]+)\.txt', os.path.basename(cond_file))
+                name = name.group(1)[1:]
+
+                values['onsets_' + name] = cond_file
 
             # Fill-in the template run-level design.fsf
             with open(run_level_fsf) as f:
@@ -209,6 +206,8 @@ def run_run_level_analyses(preproc_dir, run_level_fsf, level1_dir, cond_files):
             run_fsf_file = os.path.join(scripts_dir, sub_run + '_level1.fsf')
             with open(run_fsf_file, "w") as f:
                 f.write(run_fsf)
+
+            raise Exception('Stopped !!!')
 
             # Run feat
             cmd = "feat " + run_fsf_file
