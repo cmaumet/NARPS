@@ -69,18 +69,16 @@ conditions = (
 # Create 3-columns onset files based on BIDS tsv files
 cond_files = create_fsl_onset_files(raw_sub_dirs, onsetDir, conditions, removed_TR_time)
 
+run_level_fsf = os.path.join(cwd, 'lib', 'templates' 'FSL_level1_template.fsf')
+# Run a GLM for each fMRI run of each subject
+run_run_level_analyses(preproc_dir, run_level_fsf, level1_dir, cond_files)
+
 raise Exception('Stopping here')
 ################################################################
 
-
-
-run_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level1.fsf')
 sub_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level2.fsf')
 grp_level_fsf = os.path.join(cwd, 'lib', 'template_ds001_FSL_level3.fsf')
 perm_template = os.path.join(cwd, 'lib', 'template_ds001_FSL_perm_test')
-
-# Run a GLM for each fMRI run of each subject
-run_run_level_analyses(preproc_dir, run_level_fsf, level1_dir, cond_files)
 
 # Run a GLM combining all the fMRI runs of each subject
 run_subject_level_analyses(level1_dir, sub_level_fsf, level2_dir)

@@ -30,7 +30,7 @@ set fmri(featwatcher_yn) 1
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) ""
+set fmri(outputdir) "$out_dir"
 
 # TR(s)
 set fmri(tr) 1.000000
@@ -245,7 +245,7 @@ set fmri(regstandard_yn) 0
 set fmri(alternateReference_yn) 0
 
 # Standard image
-set fmri(regstandard) "/Users/camaumet/Softs/fsl/data/standard/MNI152_T1_2mm_brain"
+set fmri(regstandard) "$FSLDIR/data/standard/MNI152_T1_2mm_brain"
 
 # Search space for registration to standard space
 # 0   : No search
@@ -273,7 +273,7 @@ set fmri(totalVoxels) 409310415
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "/Volumes/cam/NARPS_out/FSL/preproc/func/sub-001_task-MGT_run-01_bold_space-MNI152NLin2009cAsym_preproc"
+set feat_files(1) "$fmri"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0
@@ -310,7 +310,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 0
 
 # Custom EV file (EV 1)
-set fmri(custom1) "/Volumes/cam/NARPS_out/FSL/onsets/sub-001_run-01_gamble.txt"
+set fmri(custom1) "$onsets_gamble"
 
 # Gamma sigma (EV 1)
 set fmri(gammasigma1) 3
@@ -365,7 +365,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 0
 
 # Custom EV file (EV 2)
-set fmri(custom2) "/Volumes/cam/NARPS_out/FSL/onsets/sub-001_run-01_gain_param.txt"
+set fmri(custom2) "$onsets_gain_param"
 
 # Gamma sigma (EV 2)
 set fmri(gammasigma2) 3
@@ -419,20 +419,8 @@ set fmri(tempfilt_yn3) 1
 # Add temporal derivative (EV 3)
 set fmri(deriv_yn3) 0
 
-# Skip (EV 3)
-set fmri(skip3) 0
-
-# Off (EV 3)
-set fmri(off3) 30
-
-# On (EV 3)
-set fmri(on3) 30
-
-# Phase (EV 3)
-set fmri(phase3) 0
-
-# Stop (EV 3)
-set fmri(stop3) -1
+# Custom EV file (EV 3)
+set fmri(custom3) "$onsets_loss_param"
 
 # Gamma sigma (EV 3)
 set fmri(gammasigma3) 3
@@ -486,20 +474,8 @@ set fmri(tempfilt_yn4) 1
 # Add temporal derivative (EV 4)
 set fmri(deriv_yn4) 0
 
-# Skip (EV 4)
-set fmri(skip4) 0
-
-# Off (EV 4)
-set fmri(off4) 30
-
-# On (EV 4)
-set fmri(on4) 30
-
-# Phase (EV 4)
-set fmri(phase4) 0
-
-# Stop (EV 4)
-set fmri(stop4) -1
+# Custom EV file (EV 3)
+set fmri(custom3) "$onsets_RT_param"
 
 # Gamma sigma (EV 4)
 set fmri(gammasigma4) 3
