@@ -48,30 +48,29 @@ else:
 # run BET on the anatomical images
 copy_data(fmriprep_sub_dirs, preproc_dir)
 
-raise Exception('Stopping here')
-################################################################
-
 # Directory to store the onset files
-onsetDir = os.path.join(fsl_dir, 'ONSETS')
+onsetDir = os.path.join(fsl_dir, 'onsets')
 
     # conditions = {...
     #         {{'gamble','gain_param', 'loss_param', 'RT_param'}, {'onset', 'duration', 'gain', 'loss', 'RT'}},...
     #     };
 
 # Define conditions and parametric modulations (if any)
+#   {VariableLabel,{TrialType,Durations}}
+#   {{VariableLabel,VariableModLabel},{TrialType,Duration,Amplitude}}
+# Use 'onset' for 'TrialType' if all rows should be used
+
 conditions = (
-    (('gamble', 'pumps_demean'), ('pumps_demean',)),
-    ('pumps_RT', ('pumps_demean', 'response_time')),
-    (('cash_fixed', 'cash_demean'), ('cash_demean',)),
-    ('cash_RT', ('cash_demean', 'response_time')),
-    (('explode_fixed', 'explode_demean'), ('explode_demean',)),
-    (('control_pumps_fixed', 'control_pumps_demean'),
-     ('control_pumps_demean',)),
-    ('control_pumps_RT', ('control_pumps_demean', 'response_time')))
+    (('gamble', 'gain_param'), ('onset', 'duration', 'gain')),
+    (('gamble', 'loss_param'), ('onset', 'duration', 'loss')),
+    (('gamble', 'RT_param'), ('onset', 'duration', 'RT')),
+)
 
 # Create 3-columns onset files based on BIDS tsv files
-cond_files = create_fsl_onset_files(config['raw_dir'], onsetDir, conditions, removed_TR_time)
+cond_files = create_fsl_onset_files(raw_sub_dirs, onsetDir, conditions, removed_TR_time)
 
+raise Exception('Stopping here')
+################################################################
 
 
 

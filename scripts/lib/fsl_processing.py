@@ -55,26 +55,17 @@ def copy_data(fmriprep_sub_dirs, preproc_dir, *args):
                 shutil.copy(fmri, func_preproc_dir)
 
 
-def create_fsl_onset_files(study_dir, OnsetDir, conditions, removed_TR_time, *args):
+def create_fsl_onset_files(sub_dirs, onset_dir, conditions, removed_TR_time, *args):
     """
     Create FSL 3-columns onset files based on BIDS tsv files. Input data in
-    'study_dir' is organised according to BIDS, the 'conditions' variable
+    'sub_dirs' are organised according to BIDS, the 'conditions' variable
     specifies the conditions of interest with respect to the regressors defined
-    in BIDS. After completion, the 3-columns files are saved in 'OnsetDir'.
+    in BIDS. After completion, the 3-columns files are saved in 'onset_dir'.
     """
     cond_files = dict()
 
-    if not os.path.isdir(OnsetDir):
-        os.mkdir(OnsetDir)
-
-    # All subject directories
-    if args:
-        subject_ids = args[0]
-        sub_dirs = []
-        for s in subject_ids:
-           sub_dirs.append(os.path.join(study_dir, 'sub-' + s))
-    else:
-        sub_dirs = glob.glob(os.path.join(study_dir, 'sub-*'))
+    if not os.path.isdir(onset_dir):
+        os.mkdir(onset_dir)
 
     removed_TR_time = str(removed_TR_time)
 
@@ -96,33 +87,51 @@ def create_fsl_onset_files(study_dir, OnsetDir, conditions, removed_TR_time, *ar
             cond_files[sub_run] = list()
 
             # For each condition of interest
-            for cond in conditions:
-                if isinstance(cond[0], str):
+            for (cond_names, (trial_type, duration, amplitude)) in conditions:
+
+                if isinstance(cond_names, str):
+                    cond_name = cond_names
+
                     # Standard condition (constant height)
                     FSL3colfile = os.path.join(
-                        OnsetDir, sub_run + '_' + cond[0])
-                    cmd = 'BIDSto3col.sh -b ' + removed_TR_time + ' -e ' + '"' + cond[1][0] + '"' +\
-                        ' -d ' + cond[1][1] + ' '\
-                        + event_file + ' '\
-                        + FSL3colfile
-                    check_call(cmd, shell=True)
-                    cond_files[sub_run].append(FSL3colfile + '.txt')
+                        onset_dir, sub_run + '_' + cond_name)
+
+                    out_file = FSL3colfile + '.txt'
+
+                    if not os.path.isfile(out_file):
+                        cmd = 'BIDSto3col.sh -b ' + removed_TR_time + ' -e ' + '"' + cond[1][0] + '"' +\
+                            ' -d ' + cond[1][1] + ' '\
+                            + event_file + ' '\
+                            + FSL3colfile
+                        check_call(cmd, shell=True)
+
+                    cond_files[sub_run].append(out_file)
                 else:
                     # Parametric modulation
                     FSL3colfile = os.path.join(
-                        OnsetDir, sub_run + '_' + cond[0][0])
+                        onset_dir, sub_run + '_' + cond_names[0])
+                    FSL3col_pmod = FSL3colfile + '_pmod.txt' 
+                    FSL3col_renamed = FSL3col_pmod.replace(
+                        cond_names[0] + '_pmod', cond_names[1])
+
+                    out_file = FSL3col_renamed
+
                     cond_files[sub_run].append(FSL3colfile + '.txt')
-                    for cond_name, cond_bids_name in dict(
-                            zip(cond[0][1:], cond[1])).items():
-                        cmd = 'BIDSto3col.sh -b ' + removed_TR_time + ' -e ' + cond_bids_name +\
-                              ' -h ' + cond_bids_name + ' ' +\
+                    if not os.path.isfile(out_file):
+
+                        if trial_type == 'onset':
+                            trial = ' -s '
+                        else:
+                            trial = ' -e ' + '"' + trial_type + '"'
+
+                        cmd = 'BIDSto3col.sh -b ' + removed_TR_time + trial +\
+                              ' -h ' + amplitude + ' ' +\
                               event_file + ' ' + FSL3colfile
                         check_call(cmd, shell=True)
-                        FSL3col_pmod = FSL3colfile + '_pmod.txt'
-                        FSL3col_renamed = FSL3col_pmod.replace(
-                            cond[0][0] + '_pmod', cond_name)
+                        print(cmd)
+
                         os.rename(FSL3col_pmod, FSL3col_renamed)
-                        cond_files[sub_run].append(FSL3col_renamed)
+                    cond_files[sub_run].append(out_file)
 
     return cond_files
 
