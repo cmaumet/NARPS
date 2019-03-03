@@ -2,7 +2,7 @@ import os
 import json
 import glob
 
-from lib.fsl_processing import copy_data, create_fsl_onset_files
+from lib.fsl_processing import create_fsl_onset_files
 from lib.fsl_processing import run_run_level_analyses
 from lib.fsl_processing import run_subject_level_analyses
 from lib.fsl_processing import run_group_level_analysis
@@ -31,15 +31,15 @@ removed_TR_time = num_ignored_volumes*TR
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
-subject_ids = ()
-raw_sub_dirs = ()
-fmriprep_sub_dirs = ()
+subject_ids = ('sub-001', 'sub-002')
+raw_sub_dirs = []
+fmriprep_sub_dirs = []
 
 # All subject directories
 if subject_ids:
     for s in subject_ids:
-        raw_sub_dirs.append(os.path.join(config['raw_dir'], 'sub-' + s))
-        fmriprep_sub_dirs.append(os.path.join(config['fmriprep_dir'], 'sub-' + s))
+        raw_sub_dirs.append(os.path.join(config['raw_dir'], s))
+        fmriprep_sub_dirs.append(os.path.join(config['fmriprep_dir'], s))
 else:
     raw_sub_dirs = glob.glob(os.path.join(config['raw_dir'], 'sub-*/'))
     fmriprep_sub_dirs = glob.glob(os.path.join(config['fmriprep_dir'], 'sub-*/'))
@@ -47,9 +47,9 @@ else:
 sub_names = list(map(os.path.basename, 
 	                 list(map(os.path.normpath, raw_sub_dirs))))
 
-# Copy raw anatomical and functional data to the preprocessing directory and
-# run BET on the anatomical images
-copy_data(fmriprep_sub_dirs, preproc_dir)
+# # Copy raw anatomical and functional data to the preprocessing directory and
+# # run BET on the anatomical images
+# copy_data(fmriprep_sub_dirs, preproc_dir)
 
 # Directory to store the onset files
 onsetDir = os.path.join(fsl_dir, 'onsets')
@@ -76,7 +76,7 @@ run_level_fsf = os.path.join(cwd, 'templates', 'FSL_level1_template.fsf')
 # Run a GLM for each fMRI run of each subject
 
 
-run_run_level_analyses(sub_names, preproc_dir, run_level_fsf, level1_dir, cond_files)
+run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_dir, cond_files)
 
 raise Exception('Stopping here')
 ################################################################
