@@ -222,7 +222,7 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
             sub_count = sub_count + 1
         print(sub_count)
 
-        if sub_count >= 8:
+        if sub_count >= 32:
             if called_feat:
                 # Wait for 10s so that folders have enough time to be created
                 time.sleep(10)
