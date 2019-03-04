@@ -161,6 +161,8 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
     """
     Run a GLM for each fMRI run of each subject
     """
+    if not os.path.isdir(level1_dir):
+        os.mkdir(level1_dir)
 
     fun_regexp = '*_bold_space-MNI152NLin2009cAsym_preproc.nii.gz'
 
