@@ -164,8 +164,9 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
 
     # For each subject
     sub_count = 0
+    called_feat = False
     for sub_folder in fmriprep_sub_dirs:
-        sub_count = sub_count + 1
+        print(sub_folder)
 
         # Find the fMRI
         fmri_files = glob.glob(
@@ -174,6 +175,7 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
         run_fsf_files = []
         # For each fMRI file
         for fmri in fmri_files:
+
             runreg = re.search('run-\d+', fmri)
             run = runreg.group(0)
             subreg = re.search('sub-\d+', fmri)
@@ -211,19 +213,20 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
                     f.write(run_fsf)
                 run_fsf_files.append(run_fsf_file)
 
-        called_feat = False
         for fsf_file in run_fsf_files:
             # Run feat
             cmd = "feat " + fsf_file + " &"
             print(cmd)
             check_call(cmd, shell=True)
             called_feat = True
-        
-        if called_feat:
-            # Wait for 10s so that folders have enough time to be created
-            time.sleep(10)
+            sub_count = sub_count + 1
+        print(sub_count)
 
         if sub_count >= 8:
+            if called_feat:
+                # Wait for 10s so that folders have enough time to be created
+                time.sleep(10)
+
             feat_dirs = glob.glob(os.path.join(level1_dir, sub, '*'))
             for i, feat_dir in enumerate(feat_dirs):
                 # values['feat_' + str(i+1)] = feat_dir
@@ -232,6 +235,7 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
                 print('Waiting for ' + report_file)
                 wait_for_feat(report_file)
             sub_count = 0
+            called_feat = False
 
 
 
