@@ -213,18 +213,21 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
                     f.write(run_fsf)
                 run_fsf_files.append(run_fsf_file)
 
+        called_feat = False
         for fsf_file in run_fsf_files:
             # Run feat
             cmd = "feat " + fsf_file + " &"
             print(cmd)
             check_call(cmd, shell=True)
-
-        # Wait for 10s so that folders have enough time to be created
-        time.sleep(10)
+            called_feat = True
+        
+        if called_feat:
+            # Wait for 10s so that folders have enough time to be created
+            time.sleep(10)
 
         feat_dirs = glob.glob(os.path.join(level1_dir, sub, '*'))
         for i, feat_dir in enumerate(feat_dirs):
-            values['feat_' + str(i+1)] = feat_dir
+            # values['feat_' + str(i+1)] = feat_dir
             report_file = os.path.join(feat_dir, 'report.html')
             # Wait for the run-level analysis to be completed
             print('Waiting for ' + report_file)
