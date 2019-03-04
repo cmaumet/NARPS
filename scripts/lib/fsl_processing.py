@@ -184,7 +184,7 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
 
             out_dir = os.path.join(level1_dir, sub, run)
 
-            out_file = os.path.join(out_dir + '.feat', thresh_zstat2.nii.gz)
+            out_file = os.path.join(out_dir + '.feat', 'thresh_zstat2.nii.gz')
 
             print(os.path.isfile(out_file))
             raise Exception('Stopping ---')
