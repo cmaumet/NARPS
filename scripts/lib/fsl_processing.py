@@ -186,37 +186,32 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
 
             out_file = os.path.join(out_dir + '.feat', 'thresh_zstat2.nii.gz')
 
-            print(os.path.isfile(out_file))
-            raise Exception('Stopping ---')
+            if not os.path.isfile(out_file):
+                # Retreive inputs required to fill-in the design.fsf template:
+                #   - fmri: Path to the functional image (this run)
+                #   - outdir: Path to output feat directory
+                #   - FSLDIR: Path to FSL (retreive from env variable FSLDIR)
+                #   - onsets_xx: Path to onset file for condition 'xx'
+                values = {'fmri': fmri, 'out_dir': out_dir,
+                          'FSLDIR': os.environ['FSLDIR']}
 
-            # Retreive inputs required to fill-in the design.fsf template:
-            #   - fmri: Path to the functional image (this run)
-            #   - outdir: Path to output feat directory
-            #   - FSLDIR: Path to FSL (retreive from env variable FSLDIR)
-            #   - onsets_xx: Path to onset file for condition 'xx'
-            values = {'fmri': fmri, 'out_dir': out_dir,
-                      'FSLDIR': os.environ['FSLDIR']}
+                
+                for cond_file in cond_files[sub_run]:
+                    name = re.search('([a-zA-Z_]+)\.txt', os.path.basename(cond_file))
+                    name = name.group(1)[1:]
 
-            
-            for cond_file in cond_files[sub_run]:
-                name = re.search('([a-zA-Z_]+)\.txt', os.path.basename(cond_file))
-                name = name.group(1)[1:]
+                    values['onsets_' + name] = cond_file
 
-                values['onsets_' + name] = cond_file
+                # Fill-in the template run-level design.fsf
+                with open(run_level_fsf) as f:
+                    tpm = f.read()
+                    t = string.Template(tpm)
+                    run_fsf = t.substitute(values)
 
-            # Fill-in the template run-level design.fsf
-            with open(run_level_fsf) as f:
-                tpm = f.read()
-                t = string.Template(tpm)
-                run_fsf = t.substitute(values)
-
-            run_fsf_file = os.path.join(level1_dir, sub_run + '_level1.fsf')
-            with open(run_fsf_file, "w") as f:
-                f.write(run_fsf)
-            print(run_fsf_file)
-            run_fsf_files.append(run_fsf_file)
-
-        print(run_fsf_files)
+                run_fsf_file = os.path.join(level1_dir, sub_run + '_level1.fsf')
+                with open(run_fsf_file, "w") as f:
+                    f.write(run_fsf)
+                run_fsf_files.append(run_fsf_file)
 
         for fsf_file in run_fsf_files:
             # Run feat
