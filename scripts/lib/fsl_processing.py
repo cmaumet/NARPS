@@ -144,17 +144,13 @@ def wait_for_feat(report_file):
     """
     running = True
     while running:
-        time.sleep(10)
-
         with open(report_file, "r") as fp:
             report_head = fp.read()
             if "STILL RUNNING" not in report_head:
                 running = False
                 # Add a new line after all the dots
-                print(" ")
             else:
-                print("."),
-                sys.stdout.flush()
+                time.sleep(10)
 
 
 def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_dir, cond_files):
