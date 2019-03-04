@@ -163,7 +163,9 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
     fun_regexp = '*_bold_space-MNI152NLin2009cAsym_preproc.nii.gz'
 
     # For each subject
+    sub_count = 0
     for sub_folder in fmriprep_sub_dirs:
+        sub_count = sub_count + 1
 
         # Find the fMRI
         fmri_files = glob.glob(
@@ -221,13 +223,16 @@ def run_run_level_analyses(sub_names, fmriprep_sub_dirs, run_level_fsf, level1_d
             # Wait for 10s so that folders have enough time to be created
             time.sleep(10)
 
-        feat_dirs = glob.glob(os.path.join(level1_dir, sub, '*'))
-        for i, feat_dir in enumerate(feat_dirs):
-            # values['feat_' + str(i+1)] = feat_dir
-            report_file = os.path.join(feat_dir, 'report.html')
-            # Wait for the run-level analysis to be completed
-            print('Waiting for ' + report_file)
-            wait_for_feat(report_file)
+        if sub_count >= 8:
+            feat_dirs = glob.glob(os.path.join(level1_dir, sub, '*'))
+            for i, feat_dir in enumerate(feat_dirs):
+                # values['feat_' + str(i+1)] = feat_dir
+                report_file = os.path.join(feat_dir, 'report.html')
+                # Wait for the run-level analysis to be completed
+                print('Waiting for ' + report_file)
+                wait_for_feat(report_file)
+            sub_count = 0
+
 
 
 def run_subject_level_analyses(level1_dir, sub_level_fsf, level2_dir):
