@@ -31,7 +31,7 @@ removed_TR_time = num_ignored_volumes*TR
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 
-subject_ids = ('sub-001', 'sub-002')
+subject_ids = []
 raw_sub_dirs = []
 fmriprep_sub_dirs = []
 
