@@ -17,6 +17,7 @@ function run_smoothing(sub_dirs, preproc_dir, sub_template)
         
         last_out_file = spm_file(spm_select('FPList', func_dir, [sub '.*_run-' sprintf('%02d',numel(fmri_files)) '.*\.nii']), 'prefix', 's');
         if ~isfile(last_out_file)            
+            copy_gunzip({sub_dirs{i}}, preproc_dir)
             
             for r = 1:numel(fmri_files)
                 disp([sub(2:end) ': smoothing (run ' num2str(r) ')'])

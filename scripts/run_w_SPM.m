@@ -48,8 +48,6 @@ function run_w_SPM()
         end
     end
     sub_names = spm_file(raw_sub_dirs, 'basename');
-    
-    copy_gunzip(fmriprep_sub_dirs, preproc_dir)
 
     % Define conditions and parametric modulations (if any)
     % FORMAT
