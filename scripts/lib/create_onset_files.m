@@ -1,8 +1,4 @@
-function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
-
-    if ~isdir(OnsetDir)
-        mkdir(OnsetDir)
-    end
+function create_onset_files(level1_dir, CondNames, removed_TR_time, sub_dirs)
 
 	removed_TR_time = num2str(removed_TR_time);
 %%% This should be a function
@@ -33,12 +29,22 @@ function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
 
         [~,sub,~] = fileparts(sub_dirs{i}); 
         
+        level1_sub_dir = fullfile(level1_dir, sub);
+        if ~isdir(level1_sub_dir)
+            mkdir(level1_sub_dir);
+        end
+        onset_dir = fullfile(level1_sub_dir, 'onsets');
+        if ~isdir(onset_dir)
+            mkdir(onset_dir);
+        end
+
+        
         for r = 1:nRun
             sub_run = [sub '_run-' sprintf('%02d',r)];
 
             event_file = event_files{r};
             ThreeCol={};
-            OutMat = fullfile(OnsetDir,sprintf('%s_SPM_MultCond.mat',sub_run));
+            OutMat = fullfile(onset_dir, sprintf('%s_SPM_MultCond.mat',sub_run));
             if ~isfile(OutMat)
                 for j = 1:length(CondNames)
 
@@ -69,9 +75,9 @@ function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
 
                     if ~iscell(cond_names)
                         cond_name = cond_names;
-                        FSL3colfile=fullfile(OnsetDir,sprintf('%s_%s',sub_run, cond_name));
+                        FSL3colfile=fullfile(onset_dir, sprintf('%s_%s',sub_run, cond_name));
                         system(['export PATH=$PATH:/Users/camaumet/Softs/bidsutils/BIDSto3col; BIDSto3col.sh -s -b ' removed_TR_time ' ' onsets_opt dur_opt ' ' event_file ' ' FSL3colfile]);                   
-                        ThreeCol{j}=fullfile(OnsetDir,sprintf('%s_%s.txt',sub_run,cond_name));
+                        ThreeCol{j}=fullfile(onset_dir, sprintf('%s_%s.txt',sub_run,cond_name));
                         CondNamesOnly{j} = cond_name;
                     else
                         % Parametric modulation
@@ -81,7 +87,7 @@ function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
                         end
 
                         base_cond_name = cond_names{1};
-                        base_cond_file = fullfile(OnsetDir,sprintf('%s_%s.txt',sub_run,base_cond_name));
+                        base_cond_file = fullfile(onset_dir, sprintf('%s_%s.txt',sub_run,base_cond_name));
                         ThreeCol{j}{1} = base_cond_file;
                         CondNamesOnly{j}{1}=base_cond_name; 
 
@@ -104,6 +110,6 @@ function create_onset_files(OnsetDir, CondNames, removed_TR_time, sub_dirs)
         end
     end
     % Delete temporary FSL three col files
-%     delete(fullfile(OnsetDir,'*.txt'));
+%     delete(fullfile(level1_dir,'*.txt'));
 end
 

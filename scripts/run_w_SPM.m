@@ -30,7 +30,7 @@ function run_w_SPM()
         addpath(fullfile(fileparts(mfilename('fullpath')), 'templates'))
     end
 
-    subject_ids = {}; %{'sub-001'} %, 'sub-002'} %, ...
+    subject_ids = {'sub-001'} %, 'sub-002'} %, ...
 %         'sub-003', 'sub-004', 'sub-005'});
     if isempty(subject_ids)
         fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
@@ -50,9 +50,6 @@ function run_w_SPM()
     sub_names = spm_file(raw_sub_dirs, 'basename');
     
     copy_gunzip(fmriprep_sub_dirs, preproc_dir)
-    
-    % Directory to store the onset files
-    onset_dir = fullfile(spm_out_dir, 'onsets');
 
     % Define conditions and parametric modulations (if any)
     % FORMAT
@@ -62,7 +59,7 @@ function run_w_SPM()
     conditions = {...
             {{'gamble','gain_param', 'loss_param', 'RT_param'}, {'onset', 'duration', 'gain', 'loss', 'RT'}},...
         };
-    create_onset_files(onset_dir, conditions, removed_TR_time, raw_sub_dirs);
+    create_onset_files(level1_dir, conditions, removed_TR_time, raw_sub_dirs);
     run_smoothing(raw_sub_dirs, preproc_dir, 'SPM_preproc_template');
     run_subject_level_analyses(sub_names, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
     
