@@ -35,7 +35,6 @@ function run_w_SPM()
     if isempty(subject_ids)
         fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
         raw_sub_dirs = cellstr(spm_select('FPList', raw_dir, 'dir', 'sub-*'));
-        
     else
         % Select only subjects of interest
         fmriprep_sub_dirs = cell(length(subject_ids),1);
@@ -48,6 +47,9 @@ function run_w_SPM()
         end
     end
     sub_names = spm_file(raw_sub_dirs, 'basename');
+    
+    disp(raw_sub_dirs)
+    disp(fmriprep_sub_dirs)
 
     % Define conditions and parametric modulations (if any)
     % FORMAT
