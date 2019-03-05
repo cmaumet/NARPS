@@ -1,4 +1,4 @@
-function run_smoothing(sub_dirs, preproc_dir, sub_template)
+function run_smoothing(fmriprep_dirs, preproc_dir, sub_template)
 
     func_dir = fullfile(preproc_dir, 'func');
     scripts_dir = fullfile(preproc_dir, '..', 'scripts');    
@@ -7,17 +7,18 @@ function run_smoothing(sub_dirs, preproc_dir, sub_template)
         mkdir(scripts_dir)
     end
     
-    for i = 1:numel(sub_dirs)
+    for i = 1:numel(fmriprep_dirs)
         clearvars FUNC_RUN_*
         
-        [~,sub,~] = fileparts(sub_dirs{i});
+        sub = spm_file(fmriprep_dirs{i}, 'filename');
         sub = ['^' sub];
         
-        fmri_files = cellstr(spm_select('List', func_dir, [sub '.*\.nii$']));
-        
-        last_out_file = spm_file(spm_select('FPList', func_dir, [sub '.*_run-' sprintf('%02d',numel(fmri_files)) '.*\.nii']), 'prefix', 's');
-        if ~isfile(last_out_file)            
-            copy_gunzip({sub_dirs{i}}, preproc_dir)
+        input_fMRI = cellstr(spm_select('FPList', fullfile(fmriprep_dirs{i}, 'func'), [sub '.*_run-.*_bold_space-MNI152NLin2009cAsym_preproc\.nii\.gz$']));
+        last_out_file = spm_file(input_fMRI{end}, 'prefix', 's', 'path', func_dir, 'ext', '');
+        if ~isfile(last_out_file)    
+            copy_gunzip({fmriprep_dirs{i}}, preproc_dir)
+            
+            fmri_files = cellstr(spm_select('List', func_dir, [sub '.*\.nii$']));
             
             for r = 1:numel(fmri_files)
                 disp([sub(2:end) ': smoothing (run ' num2str(r) ')'])

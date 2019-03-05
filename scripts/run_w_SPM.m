@@ -58,7 +58,7 @@ function run_w_SPM()
             {{'gamble','gain_param', 'loss_param', 'RT_param'}, {'onset', 'duration', 'gain', 'loss', 'RT'}},...
         };
     create_onset_files(level1_dir, conditions, removed_TR_time, raw_sub_dirs);
-    run_smoothing(raw_sub_dirs, preproc_dir, 'SPM_preproc_template');
+    run_smoothing(fmriprep_sub_dirs, preproc_dir, 'SPM_preproc_template');
     run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
     
     participants = tdfread(fullfile(raw_dir, 'participants.tsv'));

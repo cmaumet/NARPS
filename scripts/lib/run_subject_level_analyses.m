@@ -43,9 +43,6 @@ function run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, sub_template
                 eval(['RotZ_' num2str(r) ' =  params.RotZ;']);
             end
             
-            % Read the motion parameters
-            fmriprep_sub_dir = fmriprep_sub_dirs
-
             % Create the matlabbatch for this subject
             eval(sub_template);
 
