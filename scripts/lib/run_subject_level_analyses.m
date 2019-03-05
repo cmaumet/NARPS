@@ -2,18 +2,20 @@ function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1
 
     onset_dir = fullfile(preproc_dir, '..', 'onsets');
     func_dir = fullfile(preproc_dir, 'func');
-    anat_dir = fullfile(preproc_dir, 'anat');
-    scripts_dir = fullfile(preproc_dir, '..', 'scripts');    
-    
-    if ~isdir(scripts_dir)
-        mkdir(scripts_dir)
-    end
 
     for i = 1:numel(sub_names)       
         clearvars FUNC_RUN_* ONSETS_RUN_* OUT_DIR
         
         sub = sub_names{i};
         OUT_DIR = fullfile(level1_dir, sub);
+        if ~isdir(OUT_DIR)
+            mkdir(OUT_DIR)
+        end
+        
+        script_dir = fullfile(OUT_DIR, 'scripts');
+        if ~isdir(script_dir)
+            mkdir(script_dir)
+        end             
         
         % Check whether second stat files was created
         stat_file = fullfile(OUT_DIR, 'spmT_0002.nii');
@@ -25,13 +27,15 @@ function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1
                 fmris = fmris(num_ignored_volumes+1:end);
                 eval(['FUNC_RUN_' num2str(r) ' =  fmris;']);
                 onset_file = spm_select('FPList', onset_dir, ['^' sub_run '.*\.mat']);
+                copyfile(onset_file, script_dir)
+                onset_file = spm_file(onset_file, 'path', script_dir);
                 eval(['ONSETS_RUN_' num2str(r) ' = onset_file;']);
             end
 
             % Create the matlabbatch for this subject
             eval(sub_template);
 
-            save(fullfile(scripts_dir, [strrep(sub,'^','') '_level1.mat']), 'matlabbatch');
+            save(fullfile(script_dir, ['batch_' strrep(sub,'^','') '_level1.mat']), 'matlabbatch');
             spm_jobman('run', matlabbatch);
         end
     end
