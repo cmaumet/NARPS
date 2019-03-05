@@ -1,6 +1,5 @@
 function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1_dir, num_ignored_volumes, TR, varargin)
 
-    onset_dir = fullfile(preproc_dir, '..', 'onsets');
     func_dir = fullfile(preproc_dir, 'func');
 
     for i = 1:numel(sub_names)       
@@ -12,6 +11,7 @@ function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1
             mkdir(OUT_DIR)
         end
         
+        onset_dir = fullfile(OUT_DIR, 'onsets');
         script_dir = fullfile(OUT_DIR, 'scripts');
         if ~isdir(script_dir)
             mkdir(script_dir)
@@ -27,8 +27,6 @@ function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1
                 fmris = fmris(num_ignored_volumes+1:end);
                 eval(['FUNC_RUN_' num2str(r) ' =  fmris;']);
                 onset_file = spm_select('FPList', onset_dir, ['^' sub_run '.*\.mat']);
-                copyfile(onset_file, script_dir)
-                onset_file = spm_file(onset_file, 'path', script_dir);
                 eval(['ONSETS_RUN_' num2str(r) ' = onset_file;']);
             end
 

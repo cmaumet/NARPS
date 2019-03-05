@@ -63,6 +63,8 @@ end
 pmod=repmat(struct('name',{},'param',{},'poly',{}),1,0);
 
 for i=1:length(ThreeCols)
+  % Set orthogonalisation to false
+  orth{i}=[0];
   if isstr(ThreeCols{i})
     names{i}=CondNames{i};
     EV=load(ThreeCols{i});
@@ -104,8 +106,6 @@ for i=1:length(ThreeCols)
 	pmod(i).name{ii-1}  = CondNames{i}{ii};
 	pmod(i).param{ii-1} = EV(:,3);
 	pmod(i).poly{ii-1}  = 1;
-%   % Set orthogonalisation to true
-    pmod(i).orth{ii-1}  = 1;
       end
     end
 
@@ -115,6 +115,6 @@ end
 if length(pmod)==0
   save(MulConMat,'names','onsets','durations')
 else
-  save(MulConMat,'names','onsets','durations','pmod')
+  save(MulConMat,'names','onsets','durations','pmod', 'orth')
 end
 
