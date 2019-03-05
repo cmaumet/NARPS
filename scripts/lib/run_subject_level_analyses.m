@@ -35,12 +35,12 @@ function run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, sub_template
                 
                 motion_file = spm_select('FPList', fullfile(fmriprep_sub_dir, 'func'), ['^' sub '.*' run '.*\.tsv$']);
                 params = tdfread(motion_file);
-                X = params.X;
-                Y = params.Y;
-                Z = params.Z;
-                RotX = params.RotX;
-                RotY = params.RotY;
-                RotZ = params.RotZ;
+                eval(['X_' num2str(r) ' =  params.X;']);
+                eval(['Y_' num2str(r) ' =  params.Y;']);
+                eval(['Z_' num2str(r) ' =  params.Z;']);
+                eval(['RotX_' num2str(r) ' =  params.RotX;']);
+                eval(['RotY_' num2str(r) ' =  params.RotY;']);
+                eval(['RotZ_' num2str(r) ' =  params.RotZ;']);
             end
             
             % Read the motion parameters
