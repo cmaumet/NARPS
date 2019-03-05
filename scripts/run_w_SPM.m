@@ -59,7 +59,7 @@ function run_w_SPM()
         };
     create_onset_files(level1_dir, conditions, removed_TR_time, raw_sub_dirs);
     run_smoothing(raw_sub_dirs, preproc_dir, 'SPM_preproc_template');
-    run_subject_level_analyses(sub_names, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
+    run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
     
     participants = tdfread(fullfile(raw_dir, 'participants.tsv'));
     selected_sub = ismember(sub_names, participants.participant_id);

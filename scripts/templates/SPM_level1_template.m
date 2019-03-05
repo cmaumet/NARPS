@@ -7,7 +7,22 @@ matlabbatch{end}.spm.stats.fmri_spec.timing.fmri_t0 = 8;
 matlabbatch{end}.spm.stats.fmri_spec.sess(1).scans = FUNC_RUN_1;
 matlabbatch{end}.spm.stats.fmri_spec.sess(1).cond = struct('name', {}, 'onset', {}, 'duration', {}, 'tmod', {}, 'pmod', {}, 'orth', {});
 matlabbatch{end}.spm.stats.fmri_spec.sess(1).multi = {ONSETS_RUN_1};
-matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress = struct('name', {}, 'val', {});
+
+regressor_names = {'X', 'Y', 'Z', 'RotX', 'RotY', 'RotZ'};
+for reg = 1:numel(regressor_names)
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg).name = regressor_names{reg};
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg).val = eval(regressor_names{reg});
+    
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg+6).name = [regressor_names{reg} ''''];
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg+6).val = [0; diff(eval(regressor_names{reg}))];
+    
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg+12).name = [regressor_names{reg} ''''''];
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg+12).val = [0; 0; diff(diff(eval(regressor_names{reg})))];
+    
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg+18).name = [regressor_names{reg} ''''''''];
+    matlabbatch{end}.spm.stats.fmri_spec.sess(1).regress(reg+18).val = [0; 0; 0; diff(diff(diff(eval(regressor_names{reg}))))];
+end
+
 % matlabbatch{end}.spm.stats.fmri_spec.sess(1).multi_reg = '<UNDEFINED>';
 matlabbatch{end}.spm.stats.fmri_spec.sess(1).hpf = 128;
 matlabbatch{end}.spm.stats.fmri_spec.sess(2).scans = FUNC_RUN_2;

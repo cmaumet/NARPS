@@ -1,11 +1,13 @@
-function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1_dir, num_ignored_volumes, TR, varargin)
+function run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, sub_template, level1_dir, num_ignored_volumes, TR, varargin)
 
     func_dir = fullfile(preproc_dir, 'func');
 
-    for i = 1:numel(sub_names)       
-        clearvars FUNC_RUN_* ONSETS_RUN_* OUT_DIR
+    for i = 1:numel(fmriprep_sub_dirs)       
+        clearvars FUNC_RUN_* ONSETS_RUN_* OUT_DIR X Y Z RotX RotY RotZ
         
-        sub = sub_names{i};
+        fmriprep_sub_dir = fmriprep_sub_dirs{i};
+        sub = spm_file(fmriprep_sub_dir, 'filename');       
+        
         OUT_DIR = fullfile(level1_dir, sub);
         if ~isdir(OUT_DIR)
             mkdir(OUT_DIR)
@@ -22,13 +24,27 @@ function run_subject_level_analyses(sub_names, preproc_dir, sub_template, level1
         if ~isfile(stat_file)
             fmri_files = cellstr(spm_select('List', func_dir, ['^s' sub '.*\.nii$']));
             for r = 1:numel(fmri_files)
-                sub_run = [sub '.*_run-' sprintf('%02d',r)];
+                run = ['run-' sprintf('%02d',r)];
+                
+                sub_run = [sub '.*_' run];
                 fmris = cellstr(spm_select('ExtFPList', func_dir, ['^s' sub_run '.*\.nii'], Inf)); 
                 fmris = fmris(num_ignored_volumes+1:end);
                 eval(['FUNC_RUN_' num2str(r) ' =  fmris;']);
                 onset_file = spm_select('FPList', onset_dir, ['^' sub_run '.*\.mat']);
                 eval(['ONSETS_RUN_' num2str(r) ' = onset_file;']);
+                
+                motion_file = spm_select('FPList', fullfile(fmriprep_sub_dir, 'func'), ['^' sub '.*' run '.*\.tsv$']);
+                params = tdfread(motion_file);
+                X = params.X;
+                Y = params.Y;
+                Z = params.Z;
+                RotX = params.RotX;
+                RotY = params.RotY;
+                RotZ = params.RotZ;
             end
+            
+            % Read the motion parameters
+            fmriprep_sub_dir = fmriprep_sub_dirs
 
             % Create the matlabbatch for this subject
             eval(sub_template);
