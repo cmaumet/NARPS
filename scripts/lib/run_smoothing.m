@@ -15,7 +15,7 @@ function run_smoothing(fmriprep_dirs, preproc_dir, sub_template)
         
         input_fMRI = cellstr(spm_select('FPList', fullfile(fmriprep_dirs{i}, 'func'), [sub '.*_run-.*_bold_space-MNI152NLin2009cAsym_preproc\.nii\.gz$']));
         last_out_file = spm_file(input_fMRI{end}, 'prefix', 's', 'path', func_dir, 'ext', '');
-        if ~isfile(last_out_file)    
+        if ~exist(last_out_file, 'file')    
             copy_gunzip({fmriprep_dirs{i}}, preproc_dir)
             
             fmri_files = cellstr(spm_select('List', func_dir, [sub '.*\.nii$']));

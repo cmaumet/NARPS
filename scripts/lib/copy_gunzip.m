@@ -24,7 +24,7 @@ function copy_gunzip(sub_dirs, preproc_dir)
         
         % Copy  & gunzip the anatomical image
         out_amri = spm_file(amri, 'path', anat_preproc_dir, 'ext', '');
-        if ~isfile(out_amri)
+        if ~exist(out_amri, 'file')
             disp([spm_file(sub_folder, 'basename') ': copy & gunzip (anat)'])
             matlabbatch = {};
             
@@ -56,7 +56,7 @@ function copy_gunzip(sub_dirs, preproc_dir)
         for r = 1:numel(fmri)
             out_fmri{r} = spm_file(fmri{r}, 'path', func_preproc_dir, 'ext', '');
             
-            if ~isfile(out_fmri{r})
+            if ~exist(out_fmri{r}, 'file')
                 disp([spm_file(sub_folder, 'basename') ': copy & gunzip (run ' num2str(r) ')'])
                 
                 matlabbatch = {};

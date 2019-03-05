@@ -21,7 +21,7 @@ function run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, sub_template
         
         % Check whether second stat files was created
         stat_file = fullfile(OUT_DIR, 'spmT_0002.nii');
-        if ~isfile(stat_file)
+        if ~exist(stat_file, 'file')
             fmri_files = cellstr(spm_select('List', func_dir, ['^s' sub '.*\.nii$']));
             for r = 1:numel(fmri_files)
                 run = ['run-' sprintf('%02d',r)];

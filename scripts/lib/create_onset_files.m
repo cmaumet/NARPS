@@ -45,7 +45,7 @@ function create_onset_files(level1_dir, CondNames, removed_TR_time, sub_dirs)
             event_file = event_files{r};
             ThreeCol={};
             OutMat = fullfile(onset_dir, sprintf('%s_SPM_MultCond.mat',sub_run));
-            if ~isfile(OutMat)
+            if ~exist(OutMat, 'file')
                 for j = 1:length(CondNames)
 
                     cond_names = CondNames{j}{1};

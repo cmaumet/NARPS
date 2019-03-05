@@ -5,7 +5,7 @@ function run_group_level_analysis(sub_names, groups, level1_dir, ...
 
     out_file = fullfile(out_dir, 'spmT_0002.nii');
     
-    if ~isfile(out_file)
+    if ~exist(out_file, 'file')
         scripts_dir = fullfile(out_dir, 'batch');
         OUT_DIR = out_dir;
 
