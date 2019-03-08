@@ -72,3 +72,9 @@ for i = 1:2
 end
 matlabbatch{end}.spm.stats.results.units = 1;
 matlabbatch{end}.spm.stats.results.export{1}.ps = true;
+matlabbatch{end}.spm.stats.results.export{2}.tspm.basename = 'thresh_';
+matlabbatch{end}.spm.stats.results.export{3}.nidm.modality = 'FMRI';
+% Check fmriprep ref space
+matlabbatch{end}.spm.stats.results.export{3}.nidm.refspace = 'ixi';
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group.nsubj = 1;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group.label = 'subject';
