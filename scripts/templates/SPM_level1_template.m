@@ -24,6 +24,7 @@ for re = 1:numel(regressor_names)
         
         matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re+6).name = [name '''^2'];
         matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re+6).val = [0; diff(reg)].^2;
+    end
 end
 matlabbatch{end}.spm.stats.fmri_spec.sess(1).hpf = 128;
 matlabbatch{end}.spm.stats.fmri_spec.sess(2).scans = FUNC_RUN_2;
@@ -47,7 +48,7 @@ matlabbatch{end}.spm.stats.fmri_spec.volt = 1;
 matlabbatch{end}.spm.stats.fmri_spec.global = 'None';
 matlabbatch{end}.spm.stats.fmri_spec.mthresh = 0.8;
 matlabbatch{end}.spm.stats.fmri_spec.mask = {''};
-matlabbatch{end}.spm.stats.fmri_spec.cvi = 'AR(1)';
+matlabbatch{end}.spm.stats.fmri_spec.cvi = 'FAST';
 matlabbatch{end+1}.spm.stats.fmri_est.spmmat(1) = cfg_dep('fMRI model specification: SPM.mat File', substruct('.','val', '{}',{1}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','spmmat'));
 matlabbatch{end}.spm.stats.fmri_est.write_residuals = 0;
 matlabbatch{end}.spm.stats.fmri_est.method.Classical = 1;
@@ -74,7 +75,6 @@ matlabbatch{end}.spm.stats.results.units = 1;
 matlabbatch{end}.spm.stats.results.export{1}.ps = true;
 matlabbatch{end}.spm.stats.results.export{2}.tspm.basename = 'thresh_';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.modality = 'FMRI';
-% Check fmriprep ref space
-matlabbatch{end}.spm.stats.results.export{3}.nidm.refspace = 'ixi';
+matlabbatch{end}.spm.stats.results.export{3}.nidm.refspace = 'mni';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.group.nsubj = 1;
 matlabbatch{end}.spm.stats.results.export{3}.nidm.group.label = 'subject';
