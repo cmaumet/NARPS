@@ -13,17 +13,19 @@ for re = 1:numel(regressor_names)
         reg = eval([regressor_names{re} '_' num2str(se)]);
         name = regressor_names{re};
 
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re).name = name;
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re).val = reg;
+        idx = (re-1)*4 + 1;
         
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re).name = [name '^2'];
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re).val = reg.^2;
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx).name = name;
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx).val = reg;
         
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re+6).name = [name ''''];
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re+6).val = [0; diff(reg)];
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx+1).name = [name '^2'];
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx+1).val = reg.^2;
         
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re+6).name = [name '''^2'];
-        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(re+6).val = [0; diff(reg)].^2;
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx+2).name = [name ''''];
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx+2).val = [0; diff(reg)];
+        
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx+3).name = [name '''^2'];
+        matlabbatch{end}.spm.stats.fmri_spec.sess(se).regress(idx+3).val = [0; diff(reg)].^2;
     end
 end
 matlabbatch{end}.spm.stats.fmri_spec.sess(1).hpf = 128;
