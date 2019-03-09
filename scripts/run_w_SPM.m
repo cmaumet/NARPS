@@ -4,8 +4,6 @@ function run_w_SPM()
     
     % Repetition time in seconds
     TR = 1;
-    
-    raw_dir
 
     spm_out_dir = fullfile(output_dir, 'SPM');
     if ~isdir(spm_out_dir)
@@ -30,7 +28,7 @@ function run_w_SPM()
         addpath(fullfile(fileparts(mfilename('fullpath')), 'templates'))
     end
 
-    subject_ids = {'sub-001'} %, 'sub-002'} %, ...
+    subject_ids = {'sub-001', 'sub-002'} %, ...
 %         'sub-003', 'sub-004', 'sub-005'});
     if isempty(subject_ids)
         fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
@@ -47,9 +45,6 @@ function run_w_SPM()
         end
     end
     sub_names = spm_file(raw_sub_dirs, 'basename');
-    
-    disp(raw_sub_dirs)
-    disp(fmriprep_sub_dirs)
 
     % Define conditions and parametric modulations (if any)
     % FORMAT
