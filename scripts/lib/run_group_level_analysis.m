@@ -56,9 +56,6 @@ function run_group_level_analysis(sub_names, groups, level1_dir, ...
 
         save(fullfile(scripts_dir, 'group.mat'), 'matlabbatch');
 
-        % Topological FDR should be 0 for voxelwise FDR
-        global defaults
-        defaults.stats.topoFDR = 0;
         spm_jobman('run', matlabbatch);
     end
 end

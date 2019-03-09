@@ -2,6 +2,10 @@ function run_w_SPM()
 
     config()
     
+    % Topological FDR should be 0 for voxelwise FDR
+    global defaults
+    defaults.stats.topoFDR = 0;
+    
     % Repetition time in seconds
     TR = 1;
 
@@ -28,7 +32,7 @@ function run_w_SPM()
         addpath(fullfile(fileparts(mfilename('fullpath')), 'templates'))
     end
 
-    subject_ids = {'sub-001', 'sub-002'} %, ...
+    subject_ids = {};% {'sub-001', 'sub-002'} %, ...
 %         'sub-003', 'sub-004', 'sub-005'});
     if isempty(subject_ids)
         fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
