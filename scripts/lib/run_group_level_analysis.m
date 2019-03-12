@@ -51,6 +51,11 @@ function run_group_level_analysis(sub_names, groups, level1_dir, ...
             error(['Unknown group: ' group_names{1}]);
         end
 
+        GROUP_1 = group_names{1};
+        GROUP_2 = group_names{2};
+        N_SUB_GROUP_1 = numel(CON_GROUP{1});
+        N_SUB_GROUP_2 = numel(CON_GROUP{2});
+        
         % Create the matlabbatch for this subject
         eval(group_batch_template);
 

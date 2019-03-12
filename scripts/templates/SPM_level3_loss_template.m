@@ -56,4 +56,7 @@ matlabbatch{end}.spm.stats.results.export{1}.ps = true;
 matlabbatch{end}.spm.stats.results.export{2}.tspm.basename = 'thresh_';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.modality = 'FMRI';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.refspace = 'mni';
-% add group info
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).nsubj = N_SUB_GROUP_1;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).label = GROUP_1;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).nsubj = N_SUB_GROUP_2;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).label = GROUP_2;
