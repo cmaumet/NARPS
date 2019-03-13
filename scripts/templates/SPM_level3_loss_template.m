@@ -24,25 +24,22 @@ matlabbatch{end}.spm.stats.fmri_est.method.Classical = 1;
 
 % contrasts
 matlabbatch{end+1}.spm.stats.con.spmmat(1) = cfg_dep('Model estimation: SPM.mat File', substruct('.','val', '{}',{2}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','spmmat'));
-matlabbatch{end}.spm.stats.con.consess{1}.tcon.name = 'loss_param_indiff_neg';
-matlabbatch{end}.spm.stats.con.consess{1}.tcon.weights = CON_VECTOR_INDIFF_NEG;
-matlabbatch{end}.spm.stats.con.consess{1}.tcon.sessrep = 'none';
-matlabbatch{end}.spm.stats.con.consess{2}.tcon.name = 'loss_param_range_neg';
-matlabbatch{end}.spm.stats.con.consess{2}.tcon.weights = CON_VECTOR_RANGE_NEG;
-matlabbatch{end}.spm.stats.con.consess{2}.tcon.sessrep = 'none';
-matlabbatch{end}.spm.stats.con.consess{3}.tcon.name = 'loss_param_indiff';
-matlabbatch{end}.spm.stats.con.consess{3}.tcon.weights = CON_VECTOR_INDIFF;
+
+matlabbatch{end}.spm.stats.con.consess{1}.fcon.name = 'loss_param_indiff';
+matlabbatch{end}.spm.stats.con.consess{1}.fcon.weights = CON_VECTOR_INDIFF;
+matlabbatch{end}.spm.stats.con.consess{1}.fcon.sessrep = 'none';
+
+matlabbatch{end}.spm.stats.con.consess{2}.fcon.name = 'loss_param_range';
+matlabbatch{end}.spm.stats.con.consess{2}.fcon.weights = CON_VECTOR_RANGE;
+matlabbatch{end}.spm.stats.con.consess{2}.fcon.sessrep = 'none';
+
+matlabbatch{end}.spm.stats.con.consess{3}.tcon.name = 'loss_range_vs_indiff';
+matlabbatch{end}.spm.stats.con.consess{3}.tcon.weights = CON_VECTOR_RANGE_VS_INDIFF;
 matlabbatch{end}.spm.stats.con.consess{3}.tcon.sessrep = 'none';
-matlabbatch{end}.spm.stats.con.consess{4}.tcon.name = 'loss_param_range';
-matlabbatch{end}.spm.stats.con.consess{4}.tcon.weights = CON_VECTOR_RANGE;
-matlabbatch{end}.spm.stats.con.consess{4}.tcon.sessrep = 'none';
-matlabbatch{end}.spm.stats.con.consess{5}.tcon.name = 'loss_range_vs_indiff';
-matlabbatch{end}.spm.stats.con.consess{5}.tcon.weights = CON_VECTOR_RANGE_VS_INDIFF;
-matlabbatch{end}.spm.stats.con.consess{5}.tcon.sessrep = 'none';
 
 % inference
 matlabbatch{end+1}.spm.stats.results.spmmat(1) = cfg_dep('Contrast Manager: SPM.mat File', substruct('.','val', '{}',{3}, '.','val', '{}',{1}, '.','val', '{}',{1}), substruct('.','spmmat'));
-for i = 1:5
+for i = 1:3
     matlabbatch{end}.spm.stats.results.conspec(i).titlestr = '';
     matlabbatch{end}.spm.stats.results.conspec(i).contrasts = i;
     matlabbatch{end}.spm.stats.results.conspec(i).threshdesc = 'FDR';
@@ -60,3 +57,60 @@ matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).nsubj = N_SUB_GROUP_I
 matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).label = 'Equal indifference group';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).nsubj = N_SUB_GROUP_RANGE;
 matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).label = 'Equal range group';
+
+matlabbatch{end+1}.spm.util.imcalc.input = {
+                                        fullfile(OUT_DIR, 'spmF_0001_thresh.nii,1');
+                                        fullfile(OUT_DIR, 'beta_0001.nii,1');
+                                        };
+matlabbatch{end}.spm.util.imcalc.output = 'hypo5_thresh';
+matlabbatch{end}.spm.util.imcalc.outdir = {OUT_DIR};
+matlabbatch{end}.spm.util.imcalc.expression = 'i1.*(i2<0)';
+matlabbatch{end}.spm.util.imcalc.var = struct('name', {}, 'value', {});
+matlabbatch{end}.spm.util.imcalc.options.dmtx = 0;
+matlabbatch{end}.spm.util.imcalc.options.mask = 0;
+matlabbatch{end}.spm.util.imcalc.options.interp = 1;
+matlabbatch{end}.spm.util.imcalc.options.dtype = 16;
+
+matlabbatch{end+1}.spm.util.imcalc.input = {
+                                        fullfile(OUT_DIR, 'spmF_0002_thresh.nii,1');
+                                        fullfile(OUT_DIR, 'beta_0002.nii,1');
+                                        };
+matlabbatch{end}.spm.util.imcalc.output = 'hypo6_thresh';
+matlabbatch{end}.spm.util.imcalc.outdir = {OUT_DIR};
+matlabbatch{end}.spm.util.imcalc.expression = 'i1.*(i2<0)';
+matlabbatch{end}.spm.util.imcalc.var = struct('name', {}, 'value', {});
+matlabbatch{end}.spm.util.imcalc.options.dmtx = 0;
+matlabbatch{end}.spm.util.imcalc.options.mask = 0;
+matlabbatch{end}.spm.util.imcalc.options.interp = 1;
+
+matlabbatch{end+1}.spm.util.imcalc.input = {
+                                        fullfile(OUT_DIR, 'spmF_0001_thresh.nii,1');
+                                        fullfile(OUT_DIR, 'beta_0001.nii,1');
+                                        };
+matlabbatch{end}.spm.util.imcalc.output = 'hypo7_thresh';
+matlabbatch{end}.spm.util.imcalc.outdir = {OUT_DIR};
+matlabbatch{end}.spm.util.imcalc.expression = 'i1.*(i2>0)';
+matlabbatch{end}.spm.util.imcalc.var = struct('name', {}, 'value', {});
+matlabbatch{end}.spm.util.imcalc.options.dmtx = 0;
+matlabbatch{end}.spm.util.imcalc.options.mask = 0;
+matlabbatch{end}.spm.util.imcalc.options.interp = 1;
+matlabbatch{end}.spm.util.imcalc.options.dtype = 16;
+
+matlabbatch{end+1}.spm.util.imcalc.input = {
+                                        fullfile(OUT_DIR, 'spmF_0002_thresh.nii,1');
+                                        fullfile(OUT_DIR, 'beta_0002.nii,1');
+                                        };
+matlabbatch{end}.spm.util.imcalc.output = 'hypo8_thresh';
+matlabbatch{end}.spm.util.imcalc.outdir = {OUT_DIR};
+matlabbatch{end}.spm.util.imcalc.expression = 'i1.*(i2>0)';
+matlabbatch{end}.spm.util.imcalc.var = struct('name', {}, 'value', {});
+matlabbatch{end}.spm.util.imcalc.options.dmtx = 0;
+matlabbatch{end}.spm.util.imcalc.options.mask = 0;
+matlabbatch{end}.spm.util.imcalc.options.interp = 1;
+matlabbatch{end}.spm.util.imcalc.options.dtype = 16;
+
+matlabbatch{end+1}.cfg_basicio.file_dir.file_ops.file_move.files = {fullfile(OUT_DIR, 'spmT_0003_thresh.nii')};
+matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyren.copyto = {OUT_DIR};
+matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyren.patrep.pattern = 'spmT_0003';
+matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyren.patrep.repl = 'hypo9';
+matlabbatch{end}.cfg_basicio.file_dir.file_ops.file_move.action.copyren.unique = false;

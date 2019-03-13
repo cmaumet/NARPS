@@ -45,8 +45,5 @@ function run_group_level_analysis(sub_names, groups, level1_dir, ...
         save(fullfile(scripts_dir, 'group.mat'), 'matlabbatch');
 
         spm_jobman('run', matlabbatch);
-        
-%         movefile('spmT_0001_thresh.nii', 'hypo1_thresh.nii')
-%         movefile('spmT_0002_thresh.nii', 'hypo2_thresh.nii')
     end
 end

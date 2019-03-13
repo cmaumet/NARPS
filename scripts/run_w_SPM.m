@@ -67,8 +67,8 @@ function run_w_SPM()
     groups = cellstr(participants.group);
     groups = groups(selected_sub);  
     
-    out_dir = fullfile(level3_dir, 'gain');
-    run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level3_gain_template', out_dir, '0001', 'gain_param_');
+%     out_dir = fullfile(level3_dir, 'gain');
+%     run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level3_gain_template', out_dir, '0001', 'gain_param_');
     
     out_dir = fullfile(level3_dir, 'loss');
     run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level3_loss_template', out_dir, '0002');
