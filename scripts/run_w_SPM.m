@@ -67,12 +67,9 @@ function run_w_SPM()
     groups = cellstr(participants.group);
     groups = groups(selected_sub);  
     
-%     out_dir = fullfile(level3_dir, 'gain');
-%     run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level3_gain_template', out_dir, '0001', 'gain_param_');
+    out_dir = fullfile(level3_dir, 'gain');
+    run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level3_gain_template', out_dir, '0001', 'gain_param_');
     
     out_dir = fullfile(level3_dir, 'loss');
     run_group_level_analysis(sub_names, groups, level1_dir, 'SPM_level3_loss_template', out_dir, '0002');
-
-    % run_permutation_test(level1_dir, 'template_ds001_SPM_perm_test', perm_dir, '0001');
-    % mean_mni_images(preproc_dir, level1_dir, mni_dir);
 end
