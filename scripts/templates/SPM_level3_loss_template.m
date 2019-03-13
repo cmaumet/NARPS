@@ -2,8 +2,8 @@
 
 matlabbatch = {};
 matlabbatch{end+1}.spm.stats.factorial_design.dir = {OUT_DIR};
-matlabbatch{end}.spm.stats.factorial_design.des.t2.scans1 = CON_GROUP{1};
-matlabbatch{end}.spm.stats.factorial_design.des.t2.scans2 = CON_GROUP{2};
+matlabbatch{end}.spm.stats.factorial_design.des.t2.scans1 = CON_GROUP_INDIF;
+matlabbatch{end}.spm.stats.factorial_design.des.t2.scans2 = CON_GROUP_RANGE;
 matlabbatch{end}.spm.stats.factorial_design.des.t2.dept = 0;
 matlabbatch{end}.spm.stats.factorial_design.des.t2.variance = 1;
 matlabbatch{end}.spm.stats.factorial_design.des.t2.gmsca = 0;
@@ -53,10 +53,10 @@ for i = 1:5
 end
 matlabbatch{end}.spm.stats.results.units = 1;
 matlabbatch{end}.spm.stats.results.export{1}.ps = true;
-matlabbatch{end}.spm.stats.results.export{2}.tspm.basename = 'thresh_';
+matlabbatch{end}.spm.stats.results.export{2}.tspm.basename = 'thresh';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.modality = 'FMRI';
 matlabbatch{end}.spm.stats.results.export{3}.nidm.refspace = 'mni';
-matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).nsubj = N_SUB_GROUP_1;
-matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).label = GROUP_1;
-matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).nsubj = N_SUB_GROUP_2;
-matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).label = GROUP_2;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).nsubj = N_SUB_GROUP_INDIF;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(1).label = 'Equal indifference group';
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).nsubj = N_SUB_GROUP_RANGE;
+matlabbatch{end}.spm.stats.results.export{3}.nidm.group(2).label = 'Equal range group';

@@ -13,48 +13,31 @@ function run_group_level_analysis(sub_names, groups, level1_dir, ...
             mkdir(scripts_dir)
         end
 
-        group_names = unique(groups);
-
-        CON_GROUP = {};
-        CON_GROUP{1} = {};
-        CON_GROUP{2} = {};
+        CON_GROUP_INDIF = {};
+        CON_GROUP_RANGE = {};
 
         for i = 1:numel(sub_names)
             sub_dir = fullfile(level1_dir, sub_names{i});
-            [~, group_id] = ismember(groups{i}, group_names);
-
-            CON_GROUP{group_id}{end+1,1} = spm_select(...
-                'FPList', sub_dir, ['con_' contrast_id '\.nii']);
-        end
-
-        if contains(lower(group_names{1}), 'indiff')
-            CON_VECTOR_INDIFF = [1 0];
-            CON_VECTOR_INDIFF_NEG = [-1 0];
-            if contains(lower(group_names{2}), 'range')
-                CON_VECTOR_RANGE = [0 1];
-                CON_VECTOR_RANGE_NEG = [0 -1];
-                CON_VECTOR_RANGE_VS_INDIFF = [-1 1];
+            con_file = spm_select('FPList', ...
+                                  sub_dir, ['con_' contrast_id '\.nii']);
+            
+            if contains(lower(groups{i}), 'indiff')
+                CON_GROUP_INDIF{end+1,1} = con_file;
+            elseif contains(lower(groups{i}), 'range')
+                CON_GROUP_RANGE{end+1,1} = con_file;
             else
-                error(['Unknown group: ' group_names{2}]);
+                error(['Unknown group: ' groups{i}]);
             end
-        elseif contains(lower(group_names{1}), 'range')
-            CON_VECTOR_RANGE = [1 0];
-            CON_VECTOR_RANGE_NEG = [-1 0];
-            if contains(lower(group_names{2}), 'indiff')
-                CON_VECTOR_INDIFF = [0 1];
-                CON_VECTOR_INDIFF_NEG = [0 -1];
-                CON_VECTOR_RANGE_VS_INDIFF = [1 -1];
-            else
-                error(['Unknown group: ' group_names{2}]);
-            end
-        else
-            error(['Unknown group: ' group_names{1}]);
         end
+        
+        CON_VECTOR_INDIFF = [1 0];
+        CON_VECTOR_RANGE = [0 1];
+        CON_VECTOR_INDIFF_NEG = [-1 0];
+        CON_VECTOR_RANGE_NEG = [0 -1];
+        CON_VECTOR_RANGE_VS_INDIFF = [-1 1];
 
-        GROUP_1 = group_names{1};
-        GROUP_2 = group_names{2};
-        N_SUB_GROUP_1 = numel(CON_GROUP{1});
-        N_SUB_GROUP_2 = numel(CON_GROUP{2});
+        N_SUB_GROUP_INDIF = numel(CON_GROUP_INDIF);
+        N_SUB_GROUP_RANGE = numel(CON_GROUP_RANGE);
         
         % Create the matlabbatch for this subject
         eval(group_batch_template);
@@ -62,5 +45,8 @@ function run_group_level_analysis(sub_names, groups, level1_dir, ...
         save(fullfile(scripts_dir, 'group.mat'), 'matlabbatch');
 
         spm_jobman('run', matlabbatch);
+        
+%         movefile('spmT_0001_thresh.nii', 'hypo1_thresh.nii')
+%         movefile('spmT_0002_thresh.nii', 'hypo2_thresh.nii')
     end
 end
