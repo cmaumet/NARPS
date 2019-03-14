@@ -18,8 +18,6 @@ function run_w_SPM()
     level1_dir = fullfile(spm_out_dir, 'level1');
     level3_dir = fullfile(spm_out_dir, 'level3');
 
-    
-    % TODO specify dummy scans
     % Specify the number of functional volumes ignored in the study
     num_ignored_volumes = 0;
     
