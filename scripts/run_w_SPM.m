@@ -34,21 +34,32 @@ function run_w_SPM()
 
     subject_ids = {};% {'sub-001', 'sub-002'} %, ...
 %         'sub-003', 'sub-004', 'sub-005'});
+    exclude_subject_ids = {'sub-013', 'sub-016', 'sub-018', 'sub-022', ...
+        'sub-026', 'sub-030', 'sub-036', 'sub-037', 'sub-068',...
+        'sub-088', 'sub-089', 'sub-093', 'sub-100', 'sub-106', 'sub-110',...
+        'sub-116', 'sub-120'};
+%     exclude_subject_ids = {'sub-030', 'sub-116'};
+%     exclude_subject_ids = {'sub-030'};
+    
     if isempty(subject_ids)
-        fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
+%         fmriprep_sub_dirs = cellstr(spm_select('FPList', fmriprep_dir, 'dir', 'sub-*'));
         raw_sub_dirs = cellstr(spm_select('FPList', raw_dir, 'dir', 'sub-*'));
-    else
-        % Select only subjects of interest
-        fmriprep_sub_dirs = cell(length(subject_ids),1);
-        raw_sub_dirs = cell(length(subject_ids),1);
-        for i = 1:length(subject_ids)
-            fmriprep_sub_dirs(i,1) = cellstr(...
-                spm_select('FPList', fmriprep_dir, 'dir', subject_ids(i)));
-            raw_sub_dirs(i,1) = cellstr(...
-                spm_select('FPList', raw_dir, 'dir', subject_ids(i)));
-        end
+        subject_ids = spm_file(raw_sub_dirs, 'basename');
     end
-    sub_names = spm_file(raw_sub_dirs, 'basename');
+    subject_ids = setdiff(subject_ids, exclude_subject_ids);
+%     else
+    % Select only subjects of interest
+    fmriprep_sub_dirs = cell(length(subject_ids),1);
+    raw_sub_dirs = cell(length(subject_ids),1);
+    for i = 1:length(subject_ids)
+        fmriprep_sub_dirs(i,1) = cellstr(...
+            spm_select('FPList', fmriprep_dir, 'dir', subject_ids(i)));
+        raw_sub_dirs(i,1) = cellstr(...
+            spm_select('FPList', raw_dir, 'dir', subject_ids(i)));
+    end
+%     end
+    sub_names = subject_ids;
+    disp(sub_names);
 
     % Define conditions and parametric modulations (if any)
     % FORMAT
@@ -63,7 +74,7 @@ function run_w_SPM()
     run_subject_level_analyses(fmriprep_sub_dirs, preproc_dir, 'SPM_level1_template', level1_dir, num_ignored_volumes, TR);
     
     participants = tdfread(fullfile(raw_dir, 'participants.tsv'));
-    selected_sub = ismember(sub_names, participants.participant_id);
+    selected_sub = ismember(participants.participant_id, sub_names);
     groups = cellstr(participants.group);
     groups = groups(selected_sub);  
     
